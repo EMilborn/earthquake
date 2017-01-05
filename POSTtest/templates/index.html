@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>test for post</title>
+</head>
+<body>
+    hi<br>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.3.min.js'></script>
+    <script>
+        function delay(ms) {
+            var cur_d = new Date();
+            var cur_ticks = cur_d.getTime();
+            var ms_passed = 0;
+            while(ms_passed < ms) {
+                var d = new Date();  // Possible memory leak?
+                var ticks = d.getTime();
+                ms_passed = ticks - cur_ticks;
+                // d = null;  // Prevent memory leak?
+            }
+        }
+        var button = document.createElement("button")
+        button.innerHTML = "test POST"
+        button.addEventListener("click", function(e) {
+            var s = performance.now()
+            for (var i = 0; i < 5000; i++) {
+                $.get( "/data/", function(){});
+            }
+            var f = performance.now()
+            var text = document.createElement("p")
+            text.innerHTML = "5000 POSTs in " + (f - s) / 1000.0 + " seconds."
+            document.body.appendChild(text)
+        })
+        document.body.appendChild(button)
+    </script>
+</body>
+</html>
