@@ -1,3 +1,5 @@
+// $.get("/game", {})
+
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
 
@@ -9,22 +11,39 @@ ctx.stroke();
 ctx.closePath();
 
 //http://javascript.info/tutorial/keyboard-events
-document.body.onkeydown = function(e) {
+document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
-            $.get("/input", {key:"LeftArrow"});
+            $.get("/input", {key:"LeftArrow", state:"Down"});
             return false;
         case 38:
-            $.get("/input", {key:"UpArrow"});
+            $.get("/input", {key:"UpArrow", state:"Down"});
             return false;
         case 39:
-            $.get("/input", {key:"RightArrow"});
+            $.get("/input", {key:"RightArrow", state:"Down"});
             return false;
         case 40:
-            $.get("/input", {key:"DownArrow"});
+            $.get("/input", {key:"DownArrow", state:"Down"});
             return false;
     }
-}
+})
+
+document.body.addEventListener("keyup", function(e) {
+    switch (e.keyCode) {
+        case 37:
+            $.get("/input", {key:"LeftArrow", state:"Up"});
+            return false;
+        case 38:
+            $.get("/input", {key:"UpArrow", state:"Up"});
+            return false;
+        case 39:
+            $.get("/input", {key:"RightArrow", state:"Up"});
+            return false;
+        case 40:
+            $.get("/input", {key:"DownArrow", state:"Up"});
+            return false;
+    }
+})
 
 var mainLoop = function() {
     $.get("/fetch", function(d) {
