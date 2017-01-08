@@ -57,6 +57,6 @@ var mainLoop = function() {
             ctx.closePath();
         };
     });
-    setTimeout(mainLoop, 15);
+    setTimeout(mainLoop, 100);
 }
 mainLoop();

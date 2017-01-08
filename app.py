@@ -16,7 +16,6 @@ def home():
 
 @app.route('/input', methods=['GET'])
 def input():
-    print 'is there anybody out there'
     key = request.args.get('key')
     keyDown = request.args.get('state') == 'Down'
     uid = request.args.get('user')

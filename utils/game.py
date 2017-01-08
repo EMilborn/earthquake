@@ -25,7 +25,6 @@ def addUser():
     return len(users) - 1
 
 def handleEvent(user, eventType, event):
-    print 'in handleEvent'
     if eventType == 'keyboard':
         key = event['key']
         keyDown = event['keyDown']
@@ -47,7 +46,6 @@ def getGameState():
 
 
 def gameLoop():
-    print 'hai'
     for user in users:
         if user.input.left:
             user.x -= 1
@@ -59,7 +57,6 @@ def gameLoop():
             user.y += 1
 
 def run():
-    print 'hey'
     running = True
     frame = time.time()
     while(1):
