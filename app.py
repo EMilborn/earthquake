@@ -34,5 +34,5 @@ def data():
 if __name__ == '__main__':
     start_new_thread(game.run, ())
     app.debug = True
-    app.run(threaded=True)
+    app.run(threaded=True, host='0.0.0.0')
     start_new_thread(game.run, ())
