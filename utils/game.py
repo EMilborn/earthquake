@@ -17,11 +17,12 @@ class Player:
         self.y = 100
         self.input = PlayerInput()
 
-users = {}
+users = []
 running = False
 
-def addUser(username):
-    users[username] = Player()
+def addUser():
+    users.append(Player())
+    return len(users) - 1
 
 def handleEvent(user, eventType, event):
     print 'in handleEvent'
@@ -38,14 +39,16 @@ def handleEvent(user, eventType, event):
             users[user].input.down = keyDown
         print users[user].input.down, users[user].input.up,users[user].input.left, users[user].input.right
 
-def getGameState(user):
-    if user in users:
-        return users[user].x,users[user].y
-    return 0,0
+def getGameState():
+    usercoords = []
+    for user in users:
+        usercoords.append((user.x,user.y))
+    return usercoords
+
 
 def gameLoop():
     print 'hai'
-    for un, user in users.iteritems():
+    for user in users:
         if user.input.left:
             user.x -= 1
         if user.input.right:
