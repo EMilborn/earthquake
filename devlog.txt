@@ -1,1 +1,4 @@
 2017-01-07 Nobel: Red circle that responds to input
+
+farhanH -- 2017-01-08 20:20
+Added a login page, but red circle does not appear anymore.
