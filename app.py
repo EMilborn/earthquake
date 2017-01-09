@@ -54,7 +54,7 @@ def auth():
      s = r.login(request.form["user"],request.form["password"])
      if s == "Welcome":
           session["user"] = request.form["user"]
-          return redirect(url_for('welcome'))
+          return redirect(url_for('home'))
      return redirect(url_for('login', var = s))
 
 @app.route("/reg/", methods = ['POST'])
