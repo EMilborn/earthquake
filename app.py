@@ -1,9 +1,24 @@
 from flask import Flask, render_template, request, session, url_for, redirect, jsonify
 import utils.game as game
+from utils import register as r, sql
 from thread import start_new_thread
+import os, sqlite3
+
+f="data/users.db"
+db = sqlite3.connect(f) #open if f exists, otherwise create
+c = db.cursor()
+
 app = Flask(__name__)
 
-@app.route('/')
+app.secret_key = os.urandom(32)
+
+@app.route("/")
+def main():
+     if "user" in session:
+          return redirect(url_for('home'))
+     return redirect(url_for("login",var = u"\u00a9" + ' 2017'))
+
+@app.route('/home/')
 def home():
     id = game.addUser()
     return render_template('index.html', id=id)
@@ -29,6 +44,29 @@ def data():
     for coo in users:
         notjson.append({'x': coo[0], 'y': coo[1]})
     return jsonify(notjson)
+
+@app.route("/login/<var>")
+def login(var):
+	return render_template("login.html", message = var)
+
+@app.route("/authenticate/", methods = ['POST'])
+def auth():
+     s = r.login(request.form["user"],request.form["password"])
+     if s == "Welcome":
+          session["user"] = request.form["user"]
+          return redirect(url_for('welcome'))
+     return redirect(url_for('login', var = s))
+
+@app.route("/reg/", methods = ['POST'])
+def reg():
+	s = r.regi(request.form["user"],request.form["password"])
+	return redirect(url_for('login', var = s))
+	
+@app.route("/bye/", methods = ['GET','POST'])
+def bye():
+     if "user" in session:
+          session.pop("user")
+     return redirect(url_for('main'))
 
 if __name__ == '__main__':
     start_new_thread(game.run, ())
