@@ -48,7 +48,7 @@ document.body.addEventListener("keyup", function(e) {
 var mainLoop = function() {
     $.get("/fetch", function(d) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for(var i=0; i<d.length; i++) {  
+        for(var i=0; i<d.length; i++) {
             ctx.beginPath();
             ctx.arc(d[i].x, d[i].y, 25, 0, 2*Math.PI);
             ctx.fillStyle = "red";

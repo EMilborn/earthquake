@@ -1,6 +1,6 @@
 import time
 # from flask import Flask
-# app = 
+# app =
 class PlayerInput:
     def __init__(self):
         self.up = False
@@ -21,6 +21,7 @@ users = []
 running = False
 
 def addUser():
+    print 'adding user'
     users.append(Player())
     return len(users) - 1
 
@@ -42,6 +43,7 @@ def getGameState():
     usercoords = []
     for user in users:
         usercoords.append((user.x,user.y))
+    print usercoords
     return usercoords
 
 

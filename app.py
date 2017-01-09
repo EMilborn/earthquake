@@ -3,6 +3,7 @@ import utils.game as game
 from utils import register as r, sql
 from thread import start_new_thread
 import os, sqlite3
+import json
 
 f="data/users.db"
 db = sqlite3.connect(f) #open if f exists, otherwise create
@@ -43,7 +44,7 @@ def data():
     notjson = []
     for coo in users:
         notjson.append({'x': coo[0], 'y': coo[1]})
-    return jsonify(notjson)
+    return json.dumps(notjson)
 
 @app.route("/login/<var>")
 def login(var):
@@ -61,7 +62,7 @@ def auth():
 def reg():
 	s = r.regi(request.form["user"],request.form["password"])
 	return redirect(url_for('login', var = s))
-	
+
 @app.route("/bye/", methods = ['GET','POST'])
 def bye():
      if "user" in session:
