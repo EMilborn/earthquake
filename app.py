@@ -49,7 +49,7 @@ def data():
 @socketio.on('input')
 def handle_input(json):
     uid = json['user']
-    game.handleEvent(uid, 'keyboard', json)
+    game.handleEvent(int(uid), 'keyboard', json)
 
 def send_gamedata(data):
     socketio.emits('gamedata', data)
