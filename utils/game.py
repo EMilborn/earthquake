@@ -1,4 +1,6 @@
 import time
+from app import send_gamedata
+import json
 # from flask import Flask
 # app =
 class PlayerInput:
@@ -75,10 +77,8 @@ def handleEvent(user, eventType, event):
 def getGameState():
     usercoords = []
     for user in users:
-        usercoords.append((user.x,user.y))
-    print usercoords
-    return usercoords
-
+        usercoords.append({'x': user.x,'y': user.y})
+    return json.dumps(usercoords)
 
 def gameLoop():
     for user in users:
@@ -96,6 +96,7 @@ def run():
     frame = time.time()
     while(1):
         gameLoop()
+        send_gamedata(getGameState())
         time.sleep(1/60.)
 
 #if __name__ == '__main__':

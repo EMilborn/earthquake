@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, url_for, redirect, jsonify
+from flask_socketio import SocketIO
 import utils.game as game
 from utils import register as r, sql
 from thread import start_new_thread
@@ -10,9 +11,8 @@ db = sqlite3.connect(f) #open if f exists, otherwise create
 c = db.cursor()
 
 app = Flask(__name__)
-
 app.secret_key = os.urandom(32)
-
+socketio = SocketIO(app)
 @app.route("/")
 def main():
      if "user" in session:
@@ -46,6 +46,14 @@ def data():
         notjson.append({'x': coo[0], 'y': coo[1]})
     return json.dumps(notjson)
 
+@socketio.on('input')
+def handle_input(json):
+    uid = json['user']
+    game.handleEvent(uid, 'keyboard', json)
+
+def send_gamedata(data):
+    socketio.emits('gamedata', data)
+
 @app.route("/login/<var>")
 def login(var):
 	return render_template("login.html", message = var)
@@ -72,5 +80,4 @@ def bye():
 if __name__ == '__main__':
     start_new_thread(game.run, ())
     app.debug = True
-    app.run(threaded=True, host='0.0.0.0')
-    start_new_thread(game.run, ())
+    socketio.run(app, threaded=True, host='0.0.0.0')
