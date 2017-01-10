@@ -12,15 +12,48 @@ class PlayerInput:
         self.mousey = -1
 
 class Player:
-    def __init__(self):
+    def __init__(self, id):
         self.x = 100
         self.y = 100
         self.input = PlayerInput()
+        self.userid = id
 
-users = []
+class Instance:
+    def __init__(self):
+        pass
+
+    def addUser(self, uid):
+        print 'adding user ' + str(uid)
+        self.players[uid] = Player()
+        self.scores[uid] = 0
+        self.names[uid] = 'Player ' + str(uid)  # XXX, use sql to get name
+
+    def gameLoop(self):
+    for id, user in user:
+        if user.input.left:
+            user.x -= 1
+        if user.input.right:
+            user.x += 1
+        if user.input.up:
+            user.y -= 1
+        if user.input.down:
+            user.y += 1
+
+    def run(self):
+    running = True
+    frame = time.time()
+    while(1):
+        self.gameLoop()
+        time.sleep(1/60.)
+
+
+users = {}
+lobby = []
+games = []
+userIdToGameIdx = {}
 running = False
 
-def addUser():
+def addUser(uid, gameid):
     print 'adding user'
     users.append(Player())
     return len(users) - 1
