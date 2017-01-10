@@ -47,6 +47,7 @@ document.body.addEventListener("keyup", function(e) {
 
 var mainLoop = function() {
     $.get("/fetch", function(d) {
+        d = JSON.parse(d)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for(var i=0; i<d.length; i++) {
             ctx.beginPath();
