@@ -12,12 +12,12 @@ def hash(a):
 def regi(name, pswrd):
     c = sql.get_all_users()
     if not(name.isalnum()):
-        return "Username has bad Characters"
+        return "Username has bad characters, must be alphanumeric"
     for user in c:
 		if name == user[0]:
-			return "Name Taken!"
+			return "Name taken!"
     sql.add_user(name, hash(pswrd))
-    return "User Added"
+    return "User added"
              
 
 def login(name, pswrd):
@@ -26,8 +26,8 @@ def login(name, pswrd):
         if name == user[0]:
             if hash(pswrd) == user[1]:
                 return "Welcome"
-            return "Incorrect Password"
-    return "User Not Found, Please Register"
+            return "Incorrect password"
+    return "User not found, please register"
 
 
 

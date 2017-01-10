@@ -17,7 +17,7 @@ app.secret_key = os.urandom(32)
 def main():
      if "user" in session:
           return redirect(url_for('home'))
-     return redirect(url_for("login",var = u"\u00a9" + ' 2017'))
+     return redirect(url_for("login", var =" "))
 
 @app.route('/home/')
 def home():
