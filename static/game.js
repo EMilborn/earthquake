@@ -27,33 +27,32 @@ socket.on('gamedata', function(json) {
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emits("input", {user:id, key:"LeftArrow", state:true});
+            socket.emits("input", JSON.stringify({user:id, key:"LeftArrow", state:true}));
             return false;
         case 38:
-            socket.emits("input", {user:id, key:"UpArrow", state:true});
+            socket.emits("input", JSON.stringify({user:id, key:"UpArrow", state:true}));
             return false;
         case 39:
-            socket.emits("input", {user:id, key:"RightArrow", state:true});
+            socket.emits("input", JSON.stringify({user:id, key:"RightArrow", state:true}));
             return false;
         case 40:
-            socket.emits("input", {user:id, key:"DownArrow", state:true});
+            socket.emits("input", JSON.stringify({user:id, key:"DownArrow", state:true}));
             return false;
     }
 })
 
-document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emits("input", {user:id, key:"LeftArrow", state:false});
+            socket.emits("input", JSON.stringify({user:id, key:"LeftArrow", state:false}));
             return false;
         case 38:
-            socket.emits("input", {user:id, key:"UpArrow", state:false});
+            socket.emits("input", JSON.stringify({user:id, key:"UpArrow", state:false}));
             return false;
         case 39:
-            socket.emits("input", {user:id, key:"RightArrow", state:false});
+            socket.emits("input", JSON.stringify({user:id, key:"RightArrow", state:false}));
             return false;
         case 40:
-            socket.emits("input", {user:id, key:"DownArrow", state:false});
+            socket.emits("input", JSON.stringify({user:id, key:"DownArrow", state:false}));
             return false;
     }
 })

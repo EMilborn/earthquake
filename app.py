@@ -47,12 +47,13 @@ def data():
     return json.dumps(notjson)
 
 @socketio.on('input')
-def handle_input(json):
-    uid = json['user']
-    game.handleEvent(int(uid), 'keyboard', json)
+def handle_input(obj):
+    obj = json.loads(obj)
+    uid = obj['user']
+    game.handleEvent(int(uid), 'keyboard', obj)
 
 def send_gamedata(data):
-    socketio.emits('gamedata', data)
+    socketio.emits('gamedata', json.dumps(data))
 
 @app.route("/login/<var>")
 def login(var):
