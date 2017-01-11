@@ -1,6 +1,6 @@
 // $.get("/game", {})
 
-var id = document.getElementById("thegame").innerHTML
+var id = document.getElementById("thegame").innerHTML;
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
 ctx.beginPath();
@@ -47,7 +47,7 @@ document.body.addEventListener("keyup", function(e) {
 
 var mainLoop = function() {
     $.get("/fetch", function(d) {
-        d = JSON.parse(d)
+        d = JSON.parse(d);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for(var i=0; i<d.length; i++) {
             ctx.beginPath();

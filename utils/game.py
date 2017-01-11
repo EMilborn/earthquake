@@ -1,6 +1,5 @@
 import time
-# from flask import Flask
-# app =
+
 class PlayerInput:
     def __init__(self):
         self.up = False
@@ -64,5 +63,3 @@ def run():
     while(1):
         gameLoop()
         time.sleep(1/60.)
-
-#if __name__ == '__main__':

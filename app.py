@@ -15,9 +15,9 @@ app.secret_key = os.urandom(32)
 
 @app.route("/")
 def main():
-     if "user" in session:
-          return redirect(url_for('home'))
-     return redirect(url_for("login", var =" "))
+    if "user" in session:
+        return redirect(url_for('home'))
+    return redirect(url_for("login", var =" "))
 
 @app.route('/home/')
 def home():
@@ -48,26 +48,26 @@ def data():
 
 @app.route("/login/<var>")
 def login(var):
-	return render_template("login.html", message = var)
+    return render_template("login.html", message = var)
 
 @app.route("/authenticate/", methods = ['POST'])
 def auth():
-     s = r.login(request.form["user"],request.form["password"])
-     if s == "Welcome":
-          session["user"] = request.form["user"]
-          return redirect(url_for('home'))
-     return redirect(url_for('login', var = s))
+    s = r.login(request.form["user"],request.form["password"])
+    if s == "Welcome":
+        session["user"] = request.form["user"]
+        return redirect(url_for('home'))
+    return redirect(url_for('login', var = s))
 
 @app.route("/reg/", methods = ['POST'])
 def reg():
-	s = r.regi(request.form["user"],request.form["password"])
-	return redirect(url_for('login', var = s))
+    s = r.regi(request.form["user"],request.form["password"])
+    return redirect(url_for('login', var = s))
 
 @app.route("/bye/", methods = ['GET','POST'])
 def bye():
-     if "user" in session:
-          session.pop("user")
-     return redirect(url_for('main'))
+    if "user" in session:
+        session.pop("user")
+    return redirect(url_for('main'))
 
 if __name__ == '__main__':
     start_new_thread(game.run, ())
