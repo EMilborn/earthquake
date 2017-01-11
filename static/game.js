@@ -1,6 +1,7 @@
 // $.get("/game", {})
 
 var id = document.getElementById("thegame").innerHTML
+var gameid = -1
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
 ctx.beginPath();
@@ -21,8 +22,13 @@ socket.on('connect', function() {
     setTimeout(deltn, 4000)
 });
 socket.on('gamedata', function(json) {
-    latestGameData = json;
-}
+    latestGameData = JSON.parse(json)[gameid];
+})
+socket.on('join', function(json) {
+    json = JSON.parse(json);  // lol
+    if json['user'] == id:
+        gameid = json['game']
+})
 //http://javascript.info/tutorial/keyboard-events
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {

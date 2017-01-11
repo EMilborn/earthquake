@@ -1,5 +1,5 @@
 import time
-from app import send_gamedata
+import app
 import json
 from random import randint
 # from flask import Flask
@@ -23,12 +23,15 @@ class Player:
 
 class Instance:
     def __init__(self, user1, user2):
+        self.players = {}
+        self.scores = {}
+        self.names = {}
         self.addUser(user1)
         self.addUser(user2)
 
     def addUser(self, uid):
         print 'adding user ' + uid
-        self.players[uid] = Player()
+        self.players[uid] = Player(uid)
         self.scores[uid] = 0
         self.names[uid] = 'Player ' + str(uid)  # XXX, use sql to get name
 
@@ -46,22 +49,21 @@ class Instance:
                 players[user].input.down = keyDown
 
     def gameLoop(self):
-    for id, user in user:
-        if user.input.left:
-            user.x -= 1
-        if user.input.right:
-            user.x += 1
-        if user.input.up:
-            user.y -= 1
-        if user.input.down:
-            user.y += 1
+        for id, user in self.players:
+            if user.input.left:
+                user.x -= 1
+            if user.input.right:
+                user.x += 1
+            if user.input.up:
+                user.y -= 1
+            if user.input.down:
+                user.y += 1
 
-    def run(self):
-    running = True
-    frame = time.time()
-    while(1):
-        self.gameLoop()
-        time.sleep(1/60.)
+    def getGameState(self):
+        usercoords = []
+        for player in self.players:
+            usercoords.append({'x': player.x, 'y': player.y})
+        return json.dumps(usercoords)
 
 
 users = {}
@@ -71,8 +73,10 @@ usertogame = {}
 running = False
 
 def addUser(user):
+    global lobby
     print 'adding user'
     lobby.append(user)
+    print lobby
     if len(lobby) == 2:
         game = Instance(lobby[0], lobby[1])
         gameid = randint(0, 1928374619283746)
@@ -89,7 +93,7 @@ def usersGame(user):
 def handleEvent(user, eventType, event):
     usersGame(user).handleEvent(user, eventType, event)
 
-def getGameState():
+def getGameStates():
     usercoords = []
     for user in users:
         usercoords.append({'x': user.x,'y': user.y})
@@ -110,8 +114,10 @@ def run():
     running = True
     frame = time.time()
     while(1):
-        gameLoop()
-        send_gamedata(getGameState())
+        print games
+        for id, game in games.iteritems():
+            game.gameLoop()
+            app.send_gamedata({id: game.getGameState()})
         time.sleep(1/60.)
 
 #if __name__ == '__main__':
