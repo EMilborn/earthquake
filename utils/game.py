@@ -40,7 +40,7 @@ class Bullet:
         self.x += self.xV
         self.y += self.yV
 
-    def collide(self.player):
+    def collide(self, player):
         if (player.x ** 2) + (self.x ** 2) < (_bulletRadius + _playerRadius) ** 2 and self.owner != player.userid:
             player.health -= _bulletDamage
             return true
