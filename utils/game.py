@@ -92,6 +92,7 @@ def usersGame(user):
     return games[usertogame[user]]
 
 def handleEvent(user, eventType, event):
+    print 'saveme'
     usersGame(user).handleEvent(user, eventType, event)
 
 def run():
