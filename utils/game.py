@@ -21,11 +21,19 @@ class Player:
         self.input = PlayerInput()
         self.userid = id
 
+class Bullet:
+    def __init__(self, id, x, y, xV, yV):
+        self.x = x
+        self.y = y
+        self.xV = xV
+        self.yV = yV
+        self.owner = id
+
 class Instance:
     def __init__(self, user1, user2):
         self.players = {}
         self.scores = {}
-        self.names = {}
+        self.bullets = {}
         self.addUser(user1)
         self.addUser(user2)
 
@@ -58,6 +66,7 @@ class Instance:
                 user.y -= 1
             if user.input.down:
                 user.y += 1
+            
 
     def getGameState(self):
         usercoords = []
@@ -101,6 +110,7 @@ def run():
         for id, game in games.iteritems():
             game.gameLoop()
             app.send_gamedata({id: game.getGameState()})
-        time.sleep(1/60.)
+            print(id)
+    time.sleep(1/60.)
 
 #if __name__ == '__main__':
