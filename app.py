@@ -30,21 +30,21 @@ def home():
 #     if not game.running:
 #         game.run()
 
-@app.route('/input', methods=['GET'])
-def input():
-    key = request.args.get('key')
-    keyDown = request.args.get('state') == 'Down'
-    uid = request.args.get('user')
-    utils.game.handleEvent(int(uid), 'keyboard', {'key': key, 'keyDown': keyDown})
-    return jsonify('')
-
-@app.route('/fetch', methods=['GET'])
-def data():
-    users = utils.game.getGameState()
-    notjson = []
-    for coo in users:
-        notjson.append({'x': coo[0], 'y': coo[1]})
-    return json.dumps(notjson)
+# @app.route('/input', methods=['GET'])
+# def input():
+#     key = request.args.get('key')
+#     keyDown = request.args.get('state') == 'Down'
+#     uid = request.args.get('user')
+#     utils.game.handleEvent(int(uid), 'keyboard', {'key': key, 'keyDown': keyDown})
+#     return jsonify('')
+#
+# @app.route('/fetch', methods=['GET'])
+# def data():
+#     users = utils.game.getGameState()
+#     notjson = []
+#     for coo in users:
+#         notjson.append({'x': coo[0], 'y': coo[1]})
+#     return json.dumps(notjson)
 
 @socketio.on('input')
 def handle_input(obj):

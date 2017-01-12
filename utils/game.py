@@ -93,28 +93,11 @@ def usersGame(user):
 def handleEvent(user, eventType, event):
     usersGame(user).handleEvent(user, eventType, event)
 
-def getGameStates():
-    usercoords = []
-    for user in users:
-        usercoords.append({'x': user.x,'y': user.y})
-    return json.dumps(usercoords)
-
-def gameLoop():
-    for user in users:
-        if user.input.left:
-            user.x -= 1
-        if user.input.right:
-            user.x += 1
-        if user.input.up:
-            user.y -= 1
-        if user.input.down:
-            user.y += 1
-
 def run():
     running = True
     frame = time.time()
     while(1):
-        print games
+        # print games
         for id, game in games.iteritems():
             game.gameLoop()
             app.send_gamedata({id: game.getGameState()})
