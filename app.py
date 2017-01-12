@@ -46,6 +46,10 @@ def home():
 #         notjson.append({'x': coo[0], 'y': coo[1]})
 #     return json.dumps(notjson)
 
+@socketio.on('message')
+def gotmessage(msg):
+    print msg, 'from client'
+
 @socketio.on('input')
 def handle_input(obj):
     print 'handling input'
@@ -53,11 +57,15 @@ def handle_input(obj):
     uid = obj['user']
     utils.game.handleEvent(int(uid), 'keyboard', obj)
 
+def callback():
+    print 'client received something'
+
 def send_joinlobby(user, gameid):
-    socketio.emit('join', json.dumps({'user': user, 'game': gameid}))
+    print 'emitting join to', user, 'id', gameid
+    socketio.emit('join', json.dumps({'user': user, 'game': gameid}), callback=callback)
 
 def send_gamedata(data):
-    socketio.emit('gamedata', json.dumps(data))
+    socketio.emit('gamedata', json.dumps(data), callback=callback)
 
 @app.route("/login/<var>")
 def login(var):

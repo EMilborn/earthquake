@@ -1,5 +1,6 @@
 // $.get("/game", {})
 
+// var io = require('socket.io')
 var id = document.getElementById("thegame").innerHTML
 var gameid = -1
 var canvas = document.getElementById("gamecanvas");
@@ -10,7 +11,8 @@ ctx.fillStyle = "red";
 ctx.fill();
 ctx.stroke();
 ctx.closePath();
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 var latestGameData = 0;
 tempMsg = function(message, time) {  // time in ms
     var newEl = document.createElement("p");
@@ -23,14 +25,10 @@ tempMsg = function(message, time) {  // time in ms
 }
 socket.on('connect', function() {
     tempMsg("Connected to server.", 4000);
+    socket.emit('message', 'hello')
 });
-socket.on('gamedata', function(json) {
-    json = JSON.parse(json);
-    if(gameid === json.id) {
-        latestGameData = json.data;
-    }
-});
-socket.on('join', function(json) {
+socket.sockets.on('join', function(json) {
+    socket.emit('message', 'joined')
     tempMsg(json, 10000);
     json = JSON.parse(json);  // lol
     tempMsg(json.user, 5000);
@@ -39,7 +37,17 @@ socket.on('join', function(json) {
         gameid = json.game;
         tempMsg("Connected to game, id = " + gameid, 10000);
     }
-})
+});
+
+socket.sockets.on('gamedata', function(json) {
+    tempMsg('Got gamedata', 500);
+    json = JSON.parse(json);
+    if(gameid === json.id) {
+        latestGameData = json.data;
+    }
+});
+
+
 //http://javascript.info/tutorial/keyboard-events
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
@@ -76,6 +84,9 @@ document.body.addEventListener("keyup", function(e) {
 })
 
 var mainLoop = function() {
+    if (gameid !== -1) {
+        socket.emit("givedata", {"gameid": gameid})
+    }
     d = latestGameData;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(var i=0; i<d.length; i++) {
