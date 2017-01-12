@@ -48,16 +48,16 @@ class Instance:
             key = event['key']
             keyDown = event['keyDown']
             if key == 'LeftArrow':
-                players[user].input.left = keyDown
+                self.players[user].input.left = keyDown
             elif key == 'RightArrow':
-                players[user].input.right = keyDown
+                self.players[user].input.right = keyDown
             elif key == 'UpArrow':
-                players[user].input.up = keyDown
+                self.players[user].input.up = keyDown
             elif key == 'DownArrow':
-                players[user].input.down = keyDown
+                self.players[user].input.down = keyDown
 
     def gameLoop(self):
-        for id, user in self.players:
+        for id, user in self.players.iteritems():
             if user.input.left:
                 user.x -= 1
             if user.input.right:
@@ -70,7 +70,7 @@ class Instance:
 
     def getGameState(self):
         usercoords = []
-        for player in self.players:
+        for id, player in self.players.iteritems():
             usercoords.append({'x': player.x, 'y': player.y})
         return json.dumps(usercoords)
 
@@ -95,6 +95,7 @@ def addUser(user):
         usertogame[lobby[0]] = gameid
         usertogame[lobby[1]] = gameid
         lobby = []
+    return user
 
 def usersGame(user):
     return games[usertogame[user]]
