@@ -57,7 +57,6 @@ class Instance:
         print 'adding user ' + uid
         self.players[uid] = Player(uid)
         self.scores[uid] = 0
-        self.names[uid] = 'Player ' + str(uid)  # XXX, use sql to get name
 
     def handleEvent(user, eventType, event):
         if eventType == 'keyboard':
@@ -82,6 +81,7 @@ class Instance:
                 user.y -= 1
             if user.input.down:
                 user.y += 1
+
             #if user.input.click:
             #self.bullets.append(bullet(id, user.x, user.y,
 
@@ -111,6 +111,8 @@ def addUser(user):
         games[gameid] = game
         usertogame[lobby[0]] = gameid
         usertogame[lobby[1]] = gameid
+        app.send_joinlobby(lobby[0], gameid)
+        app.send_joinlobby(lobby[1], gameid)
         lobby = []
     return user
 
@@ -118,6 +120,7 @@ def usersGame(user):
     return games[usertogame[user]]
 
 def handleEvent(user, eventType, event):
+    print 'saveme'
     usersGame(user).handleEvent(user, eventType, event)
 
 def run():
@@ -127,8 +130,8 @@ def run():
         # print games
         for id, game in games.iteritems():
             game.gameLoop()
-            app.send_gamedata({id: game.getGameState()})
-            print(id)
-    time.sleep(1/60.)
+            app.send_gamedata({'id': id, 'data': game.getGameState()})
+            # print(id)
+        time.sleep(1/60.)
 
 #if __name__ == '__main__':

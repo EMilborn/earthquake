@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, url_for, redirect, jsonify
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 import utils.game
 from utils import register as r, sql
 from thread import start_new_thread
@@ -48,6 +48,7 @@ def home():
 
 @socketio.on('input')
 def handle_input(obj):
+    print 'handling input'
     obj = json.loads(obj)
     uid = obj['user']
     utils.game.handleEvent(int(uid), 'keyboard', obj)
