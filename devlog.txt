@@ -1,4 +1,20 @@
-2017-01-07 Nobel: Red circle that responds to input
+nobelG -- 2017-01-07 12:00 
+Red circle that responds to input
+
+gabrielM -- 2017-01-08 20:20
+Added threading for game loop, fixed player movement. Created Multiplayer, works on LAN.
 
 farhanH -- 2017-01-08 20:20
 Added a login page, but red circle does not appear anymore.
+
+gabrielM -- 2017-01-09 20:20
+Fixed /home/ route references, and fixed data communication using json
+
+gabrielM -- 2017-01-10 20:20
+Parsed JSON
+
+eliasM -- 2017-01-10 20:20
+updated game mechanics
+
+nobelG -- 2017-01-11 12:00 
+fixed formatting
