@@ -41,6 +41,14 @@ socket.on('join', function(json) {
     }
 })
 //http://javascript.info/tutorial/keyboard-events
+document.body.addEventListener("mousedown", function(e) {
+    socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:true}));
+});
+
+document.body.addEventListener("mouseup", function(e) {
+    socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:false}));
+});
+
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
@@ -56,7 +64,7 @@ document.body.addEventListener("keydown", function(e) {
             socket.emit("input", JSON.stringify({user:id, key:"DownArrow", state:true}));
             return false;
     }
-})
+});
 
 document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
