@@ -5,7 +5,7 @@ from utils import register as r, sql
 from thread import start_new_thread
 import os, sqlite3
 import json
-
+from random import randint
 f="data/users.db"
 db = sqlite3.connect(f) #open if f exists, otherwise create
 c = db.cursor()
@@ -21,7 +21,7 @@ def main():
 
 @app.route('/home/')
 def home():
-    id = utils.game.addUser(session['user'])
+    id = utils.game.addUser(session['user'] + str(randint(1,1000000)))
     return render_template('index.html', id=id)
 
 # @app.route('/game', methods=['GET'])
@@ -38,7 +38,7 @@ def home():
 #     utils.game.handleEvent(int(uid), 'keyboard', {'key': key, 'keyDown': keyDown})
 #     return jsonify('')
 #
-# @app.route('/fetch', methods=['GET'])
+# @app.route('/fetch', methods=[ome/'GET'])
 # def data():
 #     users = utils.game.getGameState()
 #     notjson = []
@@ -53,10 +53,10 @@ def handle_input(obj):
     utils.game.handleEvent(int(uid), 'keyboard', obj)
 
 def send_joinlobby(user, gameid):
-    socketio.emits('join', json.dumps({'user': user, 'game': gameid}))
+    socketio.emit('join', json.dumps({'user': user, 'game': gameid}))
 
 def send_gamedata(data):
-    socketio.emits('gamedata', json.dumps(data))
+    socketio.emit('gamedata', json.dumps(data))
 
 @app.route("/login/<var>")
 def login(var):
