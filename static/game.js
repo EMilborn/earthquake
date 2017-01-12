@@ -12,53 +12,65 @@ ctx.stroke();
 ctx.closePath();
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 var latestGameData = 0;
-socket.on('connect', function() {
-    var tn = document.createElement("p");
-    tn.innerHTML = "Connected to server.";
-    document.body.appendChild(tn);
-    var deltn = function() {
-        document.body.removeChild(tn);
+tempMsg = function(message, time) {  // time in ms
+    var newEl = document.createElement("p");
+    newEl.innerHTML = message;
+    document.body.appendChild(newEl);
+    var killEl = function() {
+        document.body.removeChild(newEl);
     }
-    setTimeout(deltn, 4000)
+    setTimeout(killEl, time);
+}
+socket.on('connect', function() {
+    tempMsg("Connected to server.", 4000);
 });
 socket.on('gamedata', function(json) {
-    latestGameData = JSON.parse(json)[gameid];
-})
+    json = JSON.parse(json);
+    if(gameid === json.id) {
+        latestGameData = json.data;
+    }
+});
 socket.on('join', function(json) {
+    tempMsg(json, 10000);
     json = JSON.parse(json);  // lol
-    if json['user'] == id:
-        gameid = json['game']
+    tempMsg(json.user, 5000);
+    tempMsg(json.game, 5000);
+    if (json.user === id) {
+        gameid = json.game;
+        tempMsg("Connected to game, id = " + gameid, 10000);
+    }
 })
 //http://javascript.info/tutorial/keyboard-events
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emits("input", JSON.stringify({user:id, key:"LeftArrow", state:true}));
+            socket.emit("input", JSON.stringify({user:id, key:"LeftArrow", state:true}));
             return false;
         case 38:
-            socket.emits("input", JSON.stringify({user:id, key:"UpArrow", state:true}));
+            socket.emit("input", JSON.stringify({user:id, key:"UpArrow", state:true}));
             return false;
         case 39:
-            socket.emits("input", JSON.stringify({user:id, key:"RightArrow", state:true}));
+            socket.emit("input", JSON.stringify({user:id, key:"RightArrow", state:true}));
             return false;
         case 40:
-            socket.emits("input", JSON.stringify({user:id, key:"DownArrow", state:true}));
+            socket.emit("input", JSON.stringify({user:id, key:"DownArrow", state:true}));
             return false;
     }
 })
 
+document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emits("input", JSON.stringify({user:id, key:"LeftArrow", state:false}));
+            socket.emit("input", JSON.stringify({user:id, key:"LeftArrow", state:false}));
             return false;
         case 38:
-            socket.emits("input", JSON.stringify({user:id, key:"UpArrow", state:false}));
+            socket.emit("input", JSON.stringify({user:id, key:"UpArrow", state:false}));
             return false;
         case 39:
-            socket.emits("input", JSON.stringify({user:id, key:"RightArrow", state:false}));
+            socket.emit("input", JSON.stringify({user:id, key:"RightArrow", state:false}));
             return false;
         case 40:
-            socket.emits("input", JSON.stringify({user:id, key:"DownArrow", state:false}));
+            socket.emit("input", JSON.stringify({user:id, key:"DownArrow", state:false}));
             return false;
     }
 })
@@ -73,7 +85,7 @@ var mainLoop = function() {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-    });
+    };
     setTimeout(mainLoop, 100);
 }
 mainLoop();

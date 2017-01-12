@@ -54,10 +54,10 @@ def handle_input(obj):
     utils.game.handleEvent(int(uid), 'keyboard', obj)
 
 def send_joinlobby(user, gameid):
-    emit('join', json.dumps({'user': user, 'game': gameid}))
+    socketio.emit('join', json.dumps({'user': user, 'game': gameid}))
 
 def send_gamedata(data):
-    emit('gamedata', json.dumps(data))
+    socketio.emit('gamedata', json.dumps(data))
 
 @app.route("/login/<var>")
 def login(var):
