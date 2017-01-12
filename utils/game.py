@@ -4,6 +4,11 @@ import json
 from random import randint
 # from flask import Flask
 # app =
+_playerHealth = 100;
+_bulletDamage = 10;
+_bulletRadius = 5;
+_playerRadius = 10;
+
 class PlayerInput:
     def __init__(self):
         self.up = False
@@ -20,6 +25,8 @@ class Player:
         self.y = 100
         self.input = PlayerInput()
         self.userid = id
+        self.health = _playerHealth
+
 
 class Bullet:
     def __init__(self, id, x, y, xV, yV):
@@ -29,6 +36,15 @@ class Bullet:
         self.yV = yV
         self.owner = id
 
+    def update(self):
+        self.x += self.xV
+        self.y += self.yV
+
+    def collide(self.player):
+        if (player.x ** 2) + (self.x ** 2) < (_bulletRadius + _playerRadius) ** 2 and self.owner != player.userid:
+            player.health -= _bulletDamage
+            return true
+        
 class Instance:
     def __init__(self, user1, user2):
         self.players = {}
@@ -66,7 +82,8 @@ class Instance:
                 user.y -= 1
             if user.input.down:
                 user.y += 1
-            
+            #if user.input.click:
+            #self.bullets.append(bullet(id, user.x, user.y,
 
     def getGameState(self):
         usercoords = []
