@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request, session, url_for, redirect, jsonify
-import utils.game as game
+from flask_socketio import SocketIO, emit
+import utils.game
 from utils import register as r, sql
 from thread import start_new_thread
 import os, sqlite3
 import json
-
+from random import randint
 f="data/users.db"
 db = sqlite3.connect(f) #open if f exists, otherwise create
 c = db.cursor()
 
 app = Flask(__name__)
-
 app.secret_key = os.urandom(32)
-
+socketio = SocketIO(app)
 @app.route("/")
 def main():
     if "user" in session:
@@ -21,7 +21,7 @@ def main():
 
 @app.route('/home/')
 def home():
-    id = game.addUser()
+    id = utils.game.addUser(session['user'] + str(randint(1,1000000)))
     return render_template('index.html', id=id)
 
 # @app.route('/game', methods=['GET'])
@@ -30,21 +30,62 @@ def home():
 #     if not game.running:
 #         game.run()
 
-@app.route('/input', methods=['GET'])
-def input():
-    key = request.args.get('key')
-    keyDown = request.args.get('state') == 'Down'
-    uid = request.args.get('user')
-    game.handleEvent(int(uid), 'keyboard', {'key': key, 'keyDown': keyDown})
-    return jsonify('')
+# @app.route('/input', methods=['GET'])
+# def input():
+#     key = request.args.get('key')
+#     keyDown = request.args.get('state') == 'Down'
+#     uid = request.args.get('user')
+#     utils.game.handleEvent(int(uid), 'keyboard', {'key': key, 'keyDown': keyDown})
+#     return jsonify('')
+#
+# @app.route('/fetch', methods=[ome/'GET'])
+# def data():
+#     users = utils.game.getGameState()
+#     notjson = []
+#     for coo in users:
+#         notjson.append({'x': coo[0], 'y': coo[1]})
+#     return json.dumps(notjson)
 
-@app.route('/fetch', methods=['GET'])
-def data():
-    users = game.getGameState()
-    notjson = []
-    for coo in users:
-        notjson.append({'x': coo[0], 'y': coo[1]})
-    return json.dumps(notjson)
+@socketio.on('message')
+def gotmessage(msg):
+    print msg, 'from client'
+
+@socketio.on('input')
+def handle_input(obj):
+    print 'handling input'
+    uid = obj['user']
+    utils.game.handleEvent(uid, 'keyboard', obj)
+
+@socketio.on('connect')
+def connecter():
+    print 'a client connected'
+    emit('hello', 'hi client')
+
+@socketio.on('givegame')
+def gamegiver(json):
+    user = json['user']
+    if user in utils.game.usertogame:
+        print 'user is in game, sending join'
+        emit('join', utils.game.usertogame[json['user']])
+
+@socketio.on('givedata')
+def datagiver(json):
+    gameid = json['game']
+    emit('gamedata', utils.game.games[gameid].getGameState())
+
+# def callback():
+#     print 'client received something'
+
+# def send_joinlobby(user, gameid):
+#     print 'emitting join to', user, 'id', gameid
+#     socketio.sleep(0)
+#     socketio.emit('join', {'user': user, 'game': gameid}, callback=callback, broadcast=True)
+#     socketio.sleep(0)
+
+# def send_gamedata(data):
+#     socketio.sleep(0)
+#     socketio.emit('gamedata', data, callback=callback, broadcast=True)
+#     socketio.sleep(0)
 
 @app.route("/login/<var>")
 def login(var):
@@ -70,7 +111,6 @@ def bye():
     return redirect(url_for('main'))
 
 if __name__ == '__main__':
-    start_new_thread(game.run, ())
+    start_new_thread(utils.game.run, ())
     app.debug = True
-    app.run(threaded=True, host='0.0.0.0')
-    start_new_thread(game.run, ())
+    socketio.run(app, host='0.0.0.0')
