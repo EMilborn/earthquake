@@ -2,6 +2,7 @@ import time
 import app
 import json
 from random import randint
+import gevent
 # from flask import Flask
 # app =
 _playerHealth = 100;
@@ -54,14 +55,14 @@ class Instance:
         self.addUser(user2)
 
     def addUser(self, uid):
-        print 'adding user ' + uid
+        print 'adding user to game'
         self.players[uid] = Player(uid)
         self.scores[uid] = 0
 
-    def handleEvent(user, eventType, event):
+    def handleEvent(self, user, eventType, event):
         if eventType == 'keyboard':
             key = event['key']
-            keyDown = event['keyDown']
+            keyDown = event['state']
             if key == 'LeftArrow':
                 self.players[user].input.left = keyDown
             elif key == 'RightArrow':
@@ -89,7 +90,8 @@ class Instance:
         usercoords = []
         for id, player in self.players.iteritems():
             usercoords.append({'x': player.x, 'y': player.y})
-        return json.dumps(usercoords)
+        # print usercoords
+        return usercoords
 
 
 users = {}
@@ -100,9 +102,8 @@ running = False
 
 def addUser(user):
     global lobby
-    print 'adding user'
+    print 'adding user to lobby'
     lobby.append(user)
-    print lobby
     if len(lobby) == 2:
         game = Instance(lobby[0], lobby[1])
         gameid = randint(0, 1928374619283746)
@@ -111,16 +112,18 @@ def addUser(user):
         games[gameid] = game
         usertogame[lobby[0]] = gameid
         usertogame[lobby[1]] = gameid
-        app.send_joinlobby(lobby[0], gameid)
-        app.send_joinlobby(lobby[1], gameid)
+        # app.send_joinlobby(lobby[0], gameid)
+        # app.send_joinlobby(lobby[1], gameid)
         lobby = []
     return user
+
+def leftLobby(user):
+    return user in lobby
 
 def usersGame(user):
     return games[usertogame[user]]
 
 def handleEvent(user, eventType, event):
-    print 'saveme'
     usersGame(user).handleEvent(user, eventType, event)
 
 def run():
@@ -130,8 +133,8 @@ def run():
         # print games
         for id, game in games.iteritems():
             game.gameLoop()
-            app.send_gamedata({'id': id, 'data': game.getGameState()})
             # print(id)
-        time.sleep(1/60.)
+        gevent.sleep(1/60.)
+        # time.sleep(1/60.)
 
 #if __name__ == '__main__':

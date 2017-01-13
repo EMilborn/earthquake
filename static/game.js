@@ -11,8 +11,8 @@ ctx.fillStyle = "red";
 ctx.fill();
 ctx.stroke();
 ctx.closePath();
-
-var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+// connect(location.protocol + '//' + document.domain + ':' + location.port);
+var socket = io()
 var latestGameData = 0;
 tempMsg = function(message, time) {  // time in ms
     var newEl = document.createElement("p");
@@ -27,24 +27,29 @@ socket.on('connect', function() {
     tempMsg("Connected to server.", 4000);
     socket.emit('message', 'hello')
 });
-socket.sockets.on('join', function(json) {
-    socket.emit('message', 'joined')
-    tempMsg(json, 10000);
-    json = JSON.parse(json);  // lol
-    tempMsg(json.user, 5000);
-    tempMsg(json.game, 5000);
-    if (json.user === id) {
-        gameid = json.game;
-        tempMsg("Connected to game, id = " + gameid, 10000);
-    }
+socket.on('hello', function(d) {
+    console.log('server said ' + d);
 });
 
-socket.sockets.on('gamedata', function(json) {
-    tempMsg('Got gamedata', 500);
-    json = JSON.parse(json);
-    if(gameid === json.id) {
-        latestGameData = json.data;
-    }
+socket.on('join', function(gid) {
+    console.log('server said to join')
+    gameid = gid
+    // socket.emit('message', 'joined')
+    // tempMsg(json, 10000);
+    // json = JSON.parse(json);  // lol
+    // tempMsg(json.user, 5000);
+    // tempMsg(json.game, 5000);
+    // if (json.user === id) {
+    //     gameid = json.game;
+    //     tempMsg("Connected to game, id = " + gameid, 10000);
+    // }
+});
+
+socket.on('gamedata', function(json) {
+    console.log('got that data')
+    //tempMsg('Got gamedata', 500);
+    latestGameData = json;
+    console.log(latestGameData)
 });
 
 
@@ -60,16 +65,16 @@ document.body.addEventListener("mouseup", function(e) {
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emit("input", JSON.stringify({user:id, key:"LeftArrow", state:true}));
+            socket.emit("input", {user:id, key:"LeftArrow", state:true});
             return false;
         case 38:
-            socket.emit("input", JSON.stringify({user:id, key:"UpArrow", state:true}));
+            socket.emit("input", {user:id, key:"UpArrow", state:true});
             return false;
         case 39:
-            socket.emit("input", JSON.stringify({user:id, key:"RightArrow", state:true}));
+            socket.emit("input", {user:id, key:"RightArrow", state:true});
             return false;
         case 40:
-            socket.emit("input", JSON.stringify({user:id, key:"DownArrow", state:true}));
+            socket.emit("input", {user:id, key:"DownArrow", state:true});
             return false;
     }
 });
@@ -77,23 +82,26 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emit("input", JSON.stringify({user:id, key:"LeftArrow", state:false}));
+            socket.emit("input", {user:id, key:"LeftArrow", state:false});
             return false;
         case 38:
-            socket.emit("input", JSON.stringify({user:id, key:"UpArrow", state:false}));
+            socket.emit("input", {user:id, key:"UpArrow", state:false});
             return false;
         case 39:
-            socket.emit("input", JSON.stringify({user:id, key:"RightArrow", state:false}));
+            socket.emit("input", {user:id, key:"RightArrow", state:false});
             return false;
         case 40:
-            socket.emit("input", JSON.stringify({user:id, key:"DownArrow", state:false}));
+            socket.emit("input", {user:id, key:"DownArrow", state:false});
             return false;
     }
 })
 
 var mainLoop = function() {
-    if (gameid !== -1) {
-        socket.emit("givedata", {"gameid": gameid})
+    if (gameid === -1) {
+        socket.emit("givegame", {"user": id});
+    }
+    else {
+        socket.emit("givedata", {"game": gameid})
     }
     d = latestGameData;
     ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -53,19 +53,39 @@ def gotmessage(msg):
 @socketio.on('input')
 def handle_input(obj):
     print 'handling input'
-    obj = json.loads(obj)
     uid = obj['user']
-    utils.game.handleEvent(int(uid), 'keyboard', obj)
+    utils.game.handleEvent(uid, 'keyboard', obj)
 
-def callback():
-    print 'client received something'
+@socketio.on('connect')
+def connecter():
+    print 'a client connected'
+    emit('hello', 'hi client')
 
-def send_joinlobby(user, gameid):
-    print 'emitting join to', user, 'id', gameid
-    socketio.emit('join', json.dumps({'user': user, 'game': gameid}), callback=callback)
+@socketio.on('givegame')
+def gamegiver(json):
+    user = json['user']
+    if user in utils.game.usertogame:
+        print 'user is in game, sending join'
+        emit('join', utils.game.usertogame[json['user']])
 
-def send_gamedata(data):
-    socketio.emit('gamedata', json.dumps(data), callback=callback)
+@socketio.on('givedata')
+def datagiver(json):
+    gameid = json['game']
+    emit('gamedata', utils.game.games[gameid].getGameState())
+
+# def callback():
+#     print 'client received something'
+
+# def send_joinlobby(user, gameid):
+#     print 'emitting join to', user, 'id', gameid
+#     socketio.sleep(0)
+#     socketio.emit('join', {'user': user, 'game': gameid}, callback=callback, broadcast=True)
+#     socketio.sleep(0)
+
+# def send_gamedata(data):
+#     socketio.sleep(0)
+#     socketio.emit('gamedata', data, callback=callback, broadcast=True)
+#     socketio.sleep(0)
 
 @app.route("/login/<var>")
 def login(var):
