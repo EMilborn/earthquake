@@ -46,10 +46,10 @@ socket.on('join', function(gid) {
 });
 
 socket.on('gamedata', function(json) {
-    console.log('got that data')
+    //console.log('got that data')
     //tempMsg('Got gamedata', 500);
     latestGameData = json;
-    console.log(latestGameData)
+    //console.log(latestGameData)
 });
 
 
@@ -113,6 +113,6 @@ var mainLoop = function() {
         ctx.stroke();
         ctx.closePath();
     };
-    setTimeout(mainLoop, 100);
+    setTimeout(mainLoop, 15);
 }
 mainLoop();
