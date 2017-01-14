@@ -18,3 +18,6 @@ updated game mechanics
 
 nobelG -- 2017-01-11 12:00 
 fixed formatting
+
+farhanH -- 2017-01-13 21:25
+Added functions that allowed use of images instead of red circle as moving object
