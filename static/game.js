@@ -11,6 +11,20 @@ ctx.fillStyle = "red";
 ctx.fill();
 ctx.stroke();
 ctx.closePath();
+
+/*
+//This allows for the use of images instead of cirlces
+function make_base(e,f){
+  base_image = new Image();
+  //base_image.src = 'http://pngimg.com/upload/banana_PNG842.png';
+  base_image.src = '/static/nobel.jpg';
+  base_image.onload = function(){
+    ctx.drawImage(base_image, e, f, 200, 200);
+  }
+}
+*/
+
+
 // connect(location.protocol + '//' + document.domain + ':' + location.port);
 var socket = io()
 var latestGameData = 0;
@@ -112,6 +126,7 @@ var mainLoop = function() {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
+				//make_base(d[i].x,d[i].y);
     };
     setTimeout(mainLoop, 15);
 }
