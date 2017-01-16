@@ -6,9 +6,13 @@ import gevent
 # from flask import Flask
 # app =
 PLAYER_HEALTH = 100;
+PLAYER_SPEED = 3;
+PLAYER_RADIUS = 10;
+
 BULLET_DAMAGE = 10;
 BULLET_RADIUS = 5;
-PLAYER_RADIUS = 10;
+BULLET_DELAY = 30;
+BULLET_SPEED = 6;
 
 class PlayerInput:
     def __init__(self):
@@ -16,7 +20,7 @@ class PlayerInput:
         self.down = False
         self.right = False
         self.left = False
-        self.click = False
+        self.mouse1 = False
         self.mousex = -1
         self.mousey = -1
 
@@ -27,7 +31,7 @@ class Player:
         self.input = PlayerInput()
         self.userid = id
         self.health = PLAYER_HEALTH
-
+        self.cooldown = 0
 
 class Bullet:
     def __init__(self, id, x, y, xV, yV):
@@ -45,7 +49,7 @@ class Bullet:
         if (player.x ** 2) + (self.x ** 2) < (BULLET_RADIUS + PLAYER_RADIUS) ** 2 and self.owner != player.userid:
             player.health -= BULLET_DAMAGE
             return true
-        
+
 class Instance:
     def __init__(self, user1, user2):
         self.players = {}
@@ -71,6 +75,8 @@ class Instance:
                 self.players[user].input.up = keyDown
             elif key == 'DownArrow':
                 self.players[user].input.down = keyDown
+            elif key == 'Mouse1':
+                self.players[user].input.mouse1 = keyDown
 
     def gameLoop(self):
         for id, user in self.players.iteritems():
@@ -82,6 +88,9 @@ class Instance:
                 user.y -= 1
             if user.input.down:
                 user.y += 1
+            if user.input.mouse1:
+
+                newBullet = Bullet(id)
 
             #if user.input.click:
             #self.bullets.append(bullet(id, user.x, user.y,

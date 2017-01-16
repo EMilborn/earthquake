@@ -52,15 +52,22 @@ socket.on('gamedata', function(json) {
     //console.log(latestGameData)
 });
 
+sendMousePos = function() {
 
+}
+
+var mouseposmatters = false;
 //http://javascript.info/tutorial/keyboard-events
 document.body.addEventListener("mousedown", function(e) {
     socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:true}));
+    sendMousePos();
 });
 
 document.body.addEventListener("mouseup", function(e) {
     socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:false}));
 });
+
+//document.body.addEventListener("mousemove")
 
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
