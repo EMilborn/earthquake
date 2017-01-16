@@ -14,13 +14,10 @@ ctx.closePath();
 
 /*
 //This allows for the use of images instead of cirlces
-function make_base(e,f){
-  base_image = new Image();
-  //base_image.src = 'http://pngimg.com/upload/banana_PNG842.png';
-  base_image.src = '/static/nobel.jpg';
-  base_image.onload = function(){
-    ctx.drawImage(base_image, e, f, 200, 200);
-  }
+img = new Image();
+img.src = '/static/nobel.jpg';
+img.onload = function(){
+  ctx.drawImage(img, 10, 10, 245, 309);
 }
 */
 
@@ -126,7 +123,7 @@ var mainLoop = function() {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-				//make_base(d[i].x,d[i].y);
+				//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
     };
     setTimeout(mainLoop, 15);
 }
