@@ -11,6 +11,17 @@ ctx.fillStyle = "red";
 ctx.fill();
 ctx.stroke();
 ctx.closePath();
+
+/*
+//This allows for the use of images instead of cirlces
+img = new Image();
+img.src = '/static/nobel.jpg';
+img.onload = function(){
+  ctx.drawImage(img, 10, 10, 245, 309);
+}
+*/
+
+
 // connect(location.protocol + '//' + document.domain + ':' + location.port);
 var socket = io()
 var latestGameData = 0;
@@ -119,6 +130,7 @@ var mainLoop = function() {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
+				//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
     };
     setTimeout(mainLoop, 15);
 }
