@@ -6,14 +6,14 @@ import eventlet
 import math
 # from flask import Flask
 # app =
-PLAYER_HEALTH = 100;
-PLAYER_SPEED = 3;
-PLAYER_RADIUS = 25;
+PLAYER_HEALTH = 100
+PLAYER_SPEED = 3
+PLAYER_RADIUS = 25
 
-BULLET_DAMAGE = 10;
-BULLET_RADIUS = 5;
-BULLET_DELAY = 30;
-BULLET_SPEED = 6;
+BULLET_DAMAGE = 10
+BULLET_RADIUS = 5
+BULLET_DELAY = 30
+BULLET_SPEED = 10
 
 class Vector:  # represents 2D vector
     def __init__(self, x, y):
@@ -71,7 +71,7 @@ class Bullet:
     def update(self):
         self.pos += self.vel
 
-    def collides(self, player):
+    def collides(self, player):  #xxx add line stuff
         if (self.pos - player.pos).lengthSquared()  \
                 <= (BULLET_RADIUS + PLAYER_RADIUS) ** 2 \
                 and self.owner != player.userid:
@@ -124,11 +124,14 @@ class Instance:
                 user.pos.y -= 1
             if user.input.down:
                 user.pos.y += 1
-            if user.input.mouse1 and not user.input.mousePos is None:
+            user.cooldown -= 1
+            if user.input.mouse1 and not user.input.mousePos is None and user.cooldown < 0:
                 print 'adding a bullet'
                 bulletVel = (user.input.mousePos - user.pos).normalized() * BULLET_SPEED
                 newBullet = Bullet(uid, user.pos, bulletVel)
                 self.bullets.append(newBullet)
+                user.cooldown = BULLET_DELAY
+        
         for bullet in self.bullets:
             bullet.update()
             #if user.input.click:
