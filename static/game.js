@@ -1,5 +1,4 @@
 // $.get("/game", {})
-
 // var io = require('socket.io')
 var id = document.getElementById("thegame").innerHTML
 var gameid = -1;
@@ -7,11 +6,13 @@ var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
 var width = canvas.width;
 var height = canvas.height;
+var img;
 
 ctx.font = "30px Arial";
 ctx.fillStyle = "black";
 ctx.textAlign = "center";
 ctx.fillText("Waiting for game...", width / 2, height / 2);
+
 
 drawCircle = function(x, y, r, col) {
     ctx.beginPath();
@@ -22,22 +23,20 @@ drawCircle = function(x, y, r, col) {
     ctx.closePath();
 }
 
+/*
 drawPlayer = function(x, y) {
     drawCircle(x, y, 25, "red");
 }
+*/
 
 drawBullet = function(x, y) {
     drawCircle(x, y, 5, "blue");
 }
 
-/*
+
 //This allows for the use of images instead of cirlces
 img = new Image();
 img.src = '/static/nobel.jpg';
-img.onload = function(){
-  ctx.drawImage(img, 10, 10, 245, 309);
-}
-*/
 
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 var latestGameData = 0;
@@ -155,11 +154,11 @@ var mainLoop = function() {
             bullets = d.bullets;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for(var i=0; i<users.length; i++) {
-                drawPlayer(users[i].x, users[i].y);
-        		//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
+                //drawPlayer(users[i].x, users[i].y);
+        		ctx.drawImage(img, users[i].x, users[i].y);//, 245, 309);
             };
             for(var i=0; i<bullets.length; i++) {
-                drawBullet(bullets[i].x, bullets[i].y);
+                drawBullet(bullets[i].x+268, bullets[i].y-363);
             };
         }
     }
