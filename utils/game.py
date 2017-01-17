@@ -179,13 +179,22 @@ def handleEvent(event):
 
 def run():
     running = True
-    frame = time.time()
+    debugtime = False
     while(1):
         # print games
+        start = time.time()
         for gid, game in games.iteritems():
             game.gameLoop()
             # print(id)
-        eventlet.sleep(1/120.)
+        rendertime = time.time() - start
+        sleeptime = 1/120. - rendertime
+        eventlet.sleep(sleeptime if sleeptime > 0 else 0)
+        if debugtime:
+            realtime = time.time() - start
+            print 'real sleep time:', realtime, '= 1 /', 1 / realtime, 'sleep time:', sleeptime,
+            if sleeptime <= 0:
+                print 'tried to sleep <= 0 time',
+            print
         # time.sleep(1/60.)
 
 #if __name__ == '__main__':
