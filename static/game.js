@@ -39,9 +39,7 @@ img.onload = function(){
 }
 */
 
-
-// connect(location.protocol + '//' + document.domain + ':' + location.port);
-var socket = io()
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 var latestGameData = 0;
 tempMsg = function(message, time) {  // time in ms
     var newEl = document.createElement("p");
@@ -54,7 +52,6 @@ tempMsg = function(message, time) {  // time in ms
 }
 socket.on('connect', function() {
     tempMsg("Connected to server.", 4000);
-    socket.emit('message', 'hello')
 });
 socket.on('hello', function(d) {
     console.log('server said ' + d);
@@ -114,7 +111,7 @@ document.body.addEventListener("mousemove", function(e) {
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emit("input", {user:id, key:"LeftArrow", state:true});
+            socket.emit("input", {user:id, event:"key", key:"LeftArrow", state:true});
             return false;
         case 38:
             socket.emit("input", {user:id, event:"key", key:"UpArrow", state:true});

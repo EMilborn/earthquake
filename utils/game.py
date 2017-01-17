@@ -185,7 +185,7 @@ def run():
         for gid, game in games.iteritems():
             game.gameLoop()
             # print(id)
-        eventlet.sleep(1/60.)
+        eventlet.sleep(1/120.)
         # time.sleep(1/60.)
 
 #if __name__ == '__main__':
