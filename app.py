@@ -1,11 +1,15 @@
+import eventlet
+eventlet.monkey_patch(os=False)
 from flask import Flask, render_template, request, session, url_for, redirect, jsonify
 from flask_socketio import SocketIO, emit
 import utils.game
 from utils import register as r, sql
-from thread import start_new_thread
-import os, sqlite3
+import thread
 import json
 from random import randint
+import sqlite3
+import os
+import sys
 f="data/users.db"
 db = sqlite3.connect(f) #open if f exists, otherwise create
 c = db.cursor()
@@ -13,6 +17,7 @@ c = db.cursor()
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 socketio = SocketIO(app)
+
 @app.route("/")
 def main():
     if "user" in session:
@@ -53,8 +58,7 @@ def gotmessage(msg):
 @socketio.on('input')
 def handle_input(obj):
     print 'handling input'
-    uid = obj['user']
-    utils.game.handleEvent(uid, 'keyboard', obj)
+    utils.game.handleEvent(obj)
 
 @socketio.on('connect')
 def connecter():
@@ -111,6 +115,9 @@ def bye():
     return redirect(url_for('main'))
 
 if __name__ == '__main__':
-    start_new_thread(utils.game.run, ())
-    app.debug = True
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
+    print 'Starting game thread'
+    thread.start_new_thread(utils.game.run, ())
+    print 'Started game thread'
+    # app.debug = True
     socketio.run(app, host='0.0.0.0')

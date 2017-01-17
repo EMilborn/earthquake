@@ -5,6 +5,24 @@ var id = document.getElementById("thegame").innerHTML
 var gameid = -1
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
+
+drawCircle = function(x, y, r, col) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 2*Math.PI);
+    ctx.fillStyle = col;
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+}
+
+drawPlayer = function(x, y) {
+    drawCircle(x, y, 25, "red");
+}
+
+drawBullet = function(x, y) {
+    drawCircle(x, y, 5, "blue");
+}
+
 ctx.beginPath();
 ctx.arc(100, 100, 25, 0, 2*Math.PI);
 ctx.fillStyle = "red";
@@ -63,20 +81,33 @@ socket.on('gamedata', function(json) {
     //console.log(latestGameData)
 });
 
-sendMousePos = function() {
-
-}
 
 var mouseposmatters = false;
+var mousex = -1;
+var mousey = -1;
+sendMousePos = function() {
+    socket.emit("input", {user:id, event:"mousemove", x: mousex, y: mousey})
+}
 //http://javascript.info/tutorial/keyboard-events
 document.body.addEventListener("mousedown", function(e) {
-    socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:true}));
     sendMousePos();
+    mouseposmatters = true;
+    socket.emit("input", {user:id, event:"key", key:"Mouse1", state:true});
+    // mouse1 is a key for all we care, acts the same way
 });
 
 document.body.addEventListener("mouseup", function(e) {
-    socket.emit("input", JSON.stringify({user:id, key:"Mouse1", state:false}));
+    mouseposmatters = false;
+    socket.emit("input", {user:id, event:"key", key:"Mouse1", state:false});
 });
+
+document.body.addEventListener("mousemove", function(e) {
+    mousex = e.pageX;
+    mousey = e.pageY;
+    if(mouseposmatters) {
+        sendMousePos();
+    }
+})
 
 //document.body.addEventListener("mousemove")
 
@@ -86,13 +117,13 @@ document.body.addEventListener("keydown", function(e) {
             socket.emit("input", {user:id, key:"LeftArrow", state:true});
             return false;
         case 38:
-            socket.emit("input", {user:id, key:"UpArrow", state:true});
+            socket.emit("input", {user:id, event:"key", key:"UpArrow", state:true});
             return false;
         case 39:
-            socket.emit("input", {user:id, key:"RightArrow", state:true});
+            socket.emit("input", {user:id, event:"key", key:"RightArrow", state:true});
             return false;
         case 40:
-            socket.emit("input", {user:id, key:"DownArrow", state:true});
+            socket.emit("input", {user:id, event:"key", key:"DownArrow", state:true});
             return false;
     }
 });
@@ -100,16 +131,16 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
         case 37:
-            socket.emit("input", {user:id, key:"LeftArrow", state:false});
+            socket.emit("input", {user:id, event:"key", key:"LeftArrow", state:false});
             return false;
         case 38:
-            socket.emit("input", {user:id, key:"UpArrow", state:false});
+            socket.emit("input", {user:id, event:"key", key:"UpArrow", state:false});
             return false;
         case 39:
-            socket.emit("input", {user:id, key:"RightArrow", state:false});
+            socket.emit("input", {user:id, event:"key", key:"RightArrow", state:false});
             return false;
         case 40:
-            socket.emit("input", {user:id, key:"DownArrow", state:false});
+            socket.emit("input", {user:id, event:"key", key:"DownArrow", state:false});
             return false;
     }
 })
@@ -120,18 +151,21 @@ var mainLoop = function() {
     }
     else {
         socket.emit("givedata", {"game": gameid})
+        d = latestGameData;
+        if (d !== 0) {
+            console.log(d)
+            users = d.users;
+            bullets = d.bullets;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(var i=0; i<users.length; i++) {
+                drawPlayer(users[i].x, users[i].y);
+        		//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
+            };
+            for(var i=0; i<bullets.length; i++) {
+                drawBullet(bullets[i].x, bullets[i].y);
+            };
+        }
     }
-    d = latestGameData;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for(var i=0; i<d.length; i++) {
-        ctx.beginPath();
-        ctx.arc(d[i].x, d[i].y, 25, 0, 2*Math.PI);
-        ctx.fillStyle = "red";
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
-				//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
-    };
     setTimeout(mainLoop, 15);
 }
 mainLoop();
