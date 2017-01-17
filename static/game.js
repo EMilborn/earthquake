@@ -2,9 +2,16 @@
 
 // var io = require('socket.io')
 var id = document.getElementById("thegame").innerHTML
-var gameid = -1
+var gameid = -1;
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
+var width = canvas.width;
+var height = canvas.height;
+
+ctx.font = "30px Arial";
+ctx.fillStyle = "black";
+ctx.textAlign = "center";
+ctx.fillText("Waiting for game...", width / 2, height / 2);
 
 drawCircle = function(x, y, r, col) {
     ctx.beginPath();
@@ -22,13 +29,6 @@ drawPlayer = function(x, y) {
 drawBullet = function(x, y) {
     drawCircle(x, y, 5, "blue");
 }
-
-ctx.beginPath();
-ctx.arc(100, 100, 25, 0, 2*Math.PI);
-ctx.fillStyle = "red";
-ctx.fill();
-ctx.stroke();
-ctx.closePath();
 
 /*
 //This allows for the use of images instead of cirlces
@@ -148,12 +148,12 @@ document.body.addEventListener("keyup", function(e) {
 var mainLoop = function() {
     if (gameid === -1) {
         socket.emit("givegame", {"user": id});
+
     }
     else {
         socket.emit("givedata", {"game": gameid})
         d = latestGameData;
         if (d !== 0) {
-            console.log(d)
             users = d.users;
             bullets = d.bullets;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
