@@ -4,16 +4,26 @@ import json
 from random import randint
 import eventlet
 import math
+from decimal import getcontext, Decimal
 # from flask import Flask
 # app =
-PLAYER_HEALTH = 100
-PLAYER_SPEED = 3
+getcontext().prec = 50
+TICKRATE_DEFAULT = 120  # the tickrate that the following numbers are based on
+TICKRATE = 125  # real tickrate, in case we change
+TICKMULT = 1.0 * TICKRATE_DEFAULT / TICKRATE
+TICKTIME = Decimal(1) / Decimal(TICKRATE)
+# PROCESSORTIME = Decimal(2) / Decimal(3000) # * Decimal(TICKRATE)
+
+REALTICKTIME = float(TICKTIME)
+PLAYER_HEALTH = 100 
+PLAYER_SPEED = 3 * TICKMULT
 PLAYER_RADIUS = 25
 
 BULLET_DAMAGE = 10
 BULLET_RADIUS = 5
-BULLET_DELAY = 30
-BULLET_SPEED = 10
+BULLET_DELAY = 30 * TICKMULT
+BULLET_SPEED = 10 * TICKMULT
+
 
 class Vector:  # represents 2D vector
     def __init__(self, x, y):
@@ -181,23 +191,34 @@ def handleEvent(event):
     usersGame(user).handleEvent(event)
 
 def run():
+    global REALTICKTIME, TICKRATE
+    print REALTICKTIME
     running = True
     debugtime = False
+    framecount = 0
+    lastsecondframe = time.time()
     while(1):
+        if debugtime and framecount != 0 and framecount % TICKRATE == 0:
+            newlsf = time.time()
+            print 'with TR',TICKRATE,'- 1 second is', newlsf - lastsecondframe
+            lastsecondframe = newlsf
+            framecount = 0
+            TICKRATE += 1
+            REALTICKTIME = 1.0 / TICKRATE
         # print games
         start = time.time()
         for gid, game in games.iteritems():
             game.gameLoop()
             # print(id)
-        rendertime = time.time() - start
-        sleeptime = 1/120. - rendertime
-        eventlet.sleep(sleeptime if sleeptime > 0 else 0)
+        eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
+        # eventlet.sleep(0)
         if debugtime:
             realtime = time.time() - start
             print 'real sleep time:', realtime, '= 1 /', 1 / realtime, 'sleep time:', sleeptime,
             if sleeptime <= 0:
                 print 'tried to sleep <= 0 time',
             print
+        framecount += 1
         # time.sleep(1/60.)
 
 #if __name__ == '__main__':
