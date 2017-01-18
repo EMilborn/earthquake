@@ -1,7 +1,8 @@
 import sqlite3
 import csv
 
-f="data/users.db"
+f = "data/users.db"
+
 
 def db_f(func):
     def wrapped(*args, **kwargs):  # handles locking and weird db issues
@@ -16,6 +17,7 @@ def db_f(func):
         return v
     return wrapped
 
+
 @db_f
 def init(db):
     cur = db.cursor()
@@ -23,10 +25,12 @@ def init(db):
     cur.execute("INSERT INTO users VALUES (-1, '', '')")
     db.commit()
 
+
 @db_f
 def add_user(db, user, password):
     cur = db.cursor()
-    q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\')"%(next_userid(db), user, password)
+    q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\')" % (
+        next_userid(db), user, password)
     print q
     cur.execute(q)
     db.commit()
@@ -34,10 +38,12 @@ def add_user(db, user, password):
 
 @db_f
 def get_userid(db, user):
-    id_holder = db.cursor().execute('SELECT id FROM users WHERE username = "' + user + '"')
+    id_holder = db.cursor().execute(
+        'SELECT id FROM users WHERE username = "' + user + '"')
     L = []
     for row in id_holder:
-        return row[0] 
+        return row[0]
+
 
 @db_f
 def get_all_users(db):
@@ -45,9 +51,10 @@ def get_all_users(db):
     res = cur.execute("SELECT * FROM users")
     L = []
     for row in res:
-        L += [[row[1],row[2]]]
+        L += [[row[1], row[2]]]
     db.commit()
     return L
+
 
 @db_f
 def next_userid(db):
