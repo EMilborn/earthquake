@@ -1,7 +1,7 @@
 // $.get("/game", {})
 
 // var io = require('socket.io')
-var id = document.getElementById("thegame").innerHTML
+var id = document.getElementById("thegame").innerHTML;
 var gameid = -1;
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
@@ -35,7 +35,7 @@ drawBullet = function(x, y) {
 img = new Image();
 img.src = '/static/nobel.jpg';
 img.onload = function(){
-  ctx.drawImage(img, 10, 10, 245, 309);
+ctx.drawImage(img, 10, 10, 245, 309);
 }
 */
 
@@ -58,8 +58,8 @@ socket.on('hello', function(d) {
 });
 
 socket.on('join', function(gid) {
-    console.log('server said to join')
-    gameid = gid
+    console.log('server said to join');
+    gameid = gid;
     // socket.emit('message', 'joined')
     // tempMsg(json, 10000);
     // json = JSON.parse(json);  // lol
@@ -145,10 +145,9 @@ document.body.addEventListener("keyup", function(e) {
 var mainLoop = function() {
     if (gameid === -1) {
         socket.emit("givegame", {"user": id});
-
     }
     else {
-        socket.emit("givedata", {"game": gameid})
+        socket.emit("givedata", {"game": gameid});
         d = latestGameData;
         if (d !== 0) {
             users = d.users;
@@ -156,7 +155,7 @@ var mainLoop = function() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for(var i=0; i<users.length; i++) {
                 drawPlayer(users[i].x, users[i].y);
-        		//ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
+                //ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
             };
             for(var i=0; i<bullets.length; i++) {
                 drawBullet(bullets[i].x, bullets[i].y);
