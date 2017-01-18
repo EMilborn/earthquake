@@ -110,16 +110,16 @@ document.body.addEventListener("mousemove", function(e) {
 
 document.body.addEventListener("keydown", function(e) {
     switch (e.keyCode) {
-        case 37:
+        case 65:
             socket.emit("input", {user:id, event:"key", key:"LeftArrow", state:true});
             return false;
-        case 38:
+        case 87:
             socket.emit("input", {user:id, event:"key", key:"UpArrow", state:true});
             return false;
-        case 39:
+        case 68:
             socket.emit("input", {user:id, event:"key", key:"RightArrow", state:true});
             return false;
-        case 40:
+        case 83:
             socket.emit("input", {user:id, event:"key", key:"DownArrow", state:true});
             return false;
     }
@@ -127,16 +127,16 @@ document.body.addEventListener("keydown", function(e) {
 
 document.body.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
-        case 37:
+        case 65:
             socket.emit("input", {user:id, event:"key", key:"LeftArrow", state:false});
             return false;
-        case 38:
+        case 87:
             socket.emit("input", {user:id, event:"key", key:"UpArrow", state:false});
             return false;
-        case 39:
+        case 68:
             socket.emit("input", {user:id, event:"key", key:"RightArrow", state:false});
             return false;
-        case 40:
+        case 83:
             socket.emit("input", {user:id, event:"key", key:"DownArrow", state:false});
             return false;
     }

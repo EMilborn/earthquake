@@ -39,7 +39,7 @@ class Vector:  # represents 2D vector
 
     def normalized(self):
         l = self.length()
-        return Vector(self.x / l, self.y / l)
+        return self / self.length()
 
     def __add__(self, vec2):
         return Vector(self.x + vec2.x, self.y + vec2.y)
@@ -207,36 +207,16 @@ def handleEvent(event):
 
 
 def run():
-    global REALTICKTIME, TICKRATE
-    print REALTICKTIME
+    print "Running at", TICKRATE, "Hz"
     running = True
-    debugtime = False
+    debugtime = True
     framecount = 0
     lastsecondframe = time.time()
     while(1):
-        if debugtime and framecount != 0 and framecount % TICKRATE == 0:
-            newlsf = time.time()
-            print 'with TR', TICKRATE,
-            print '- 1 second is', newlsf - lastsecondframe
-            lastsecondframe = newlsf
-            framecount = 0
-            TICKRATE += 1
-            REALTICKTIME = 1.0 / TICKRATE
-        # print games
         start = time.time()
         for gid, game in games.iteritems():
             game.gameLoop()
-            # print(id)
         eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
-        # eventlet.sleep(0)
-        if debugtime:
-            realtime = time.time() - start
-            print 'real sleep time:', realtime,
-            print '= 1 /', 1 / realtime, 'sleep time:', sleeptime,
-            if sleeptime <= 0:
-                print 'tried to sleep <= 0 time',
-            print
         framecount += 1
-        # time.sleep(1/60.)
 
 # if __name__ == '__main__':
