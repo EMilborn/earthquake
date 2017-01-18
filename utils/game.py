@@ -4,18 +4,18 @@ import json
 from random import randint
 import eventlet
 import math
-from decimal import getcontext, Decimal
+# from decimal import getcontext, Decimal
 # from flask import Flask
 # app =
-getcontext().prec = 50
+# getcontext().prec = 50
 TICKRATE_DEFAULT = 120  # the tickrate that the following numbers are based on
 TICKRATE = 125  # real tickrate, in case we change
 TICKMULT = 1.0 * TICKRATE_DEFAULT / TICKRATE
-TICKTIME = Decimal(1) / Decimal(TICKRATE)
+TICKTIME = 1.0 / TICKRATE  # Decimal(1) / Decimal(TICKRATE)
 # PROCESSORTIME = Decimal(2) / Decimal(3000) # * Decimal(TICKRATE)
 
 REALTICKTIME = float(TICKTIME)
-PLAYER_HEALTH = 100 
+PLAYER_HEALTH = 100
 PLAYER_SPEED = 3 * TICKMULT
 PLAYER_RADIUS = 25
 
@@ -26,6 +26,7 @@ BULLET_SPEED = 10 * TICKMULT
 
 
 class Vector:  # represents 2D vector
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -55,7 +56,9 @@ class Vector:  # represents 2D vector
     def __div__(self, scalar):
         return self * (1.0 / scalar)
 
+
 class PlayerInput:
+
     def __init__(self):
         self.up = False
         self.down = False
@@ -64,7 +67,9 @@ class PlayerInput:
         self.mouse1 = False
         self.mousePos = None
 
+
 class Player:
+
     def __init__(self, id):
         self.pos = Vector(-1, -1)
         self.input = PlayerInput()
@@ -72,7 +77,9 @@ class Player:
         self.health = PLAYER_HEALTH
         self.cooldown = 0
 
+
 class Bullet:
+
     def __init__(self, id, pos, vel):
         self.pos = pos
         self.vel = vel
@@ -81,14 +88,16 @@ class Bullet:
     def update(self):
         self.pos += self.vel
 
-    def collides(self, player):  #xxx add line stuff
+    def collides(self, player):  # xxx add line stuff
         if (self.pos - player.pos).lengthSquared()  \
                 <= (BULLET_RADIUS + PLAYER_RADIUS) ** 2 \
                 and self.owner != player.userid:
             player.health -= BULLET_DAMAGE
             return True
 
+
 class Instance:
+
     def __init__(self, user1, user2):
         self.players = {}
         self.scores = {}
@@ -135,17 +144,19 @@ class Instance:
             if user.input.down:
                 user.pos.y += 1
             user.cooldown -= 1
-            if user.input.mouse1 and not user.input.mousePos is None and user.cooldown < 0:
+            if user.input.mouse1 and user.input.mousePos is not None \
+                    and user.cooldown < 0:
                 print 'adding a bullet'
-                bulletVel = (user.input.mousePos - user.pos).normalized() * BULLET_SPEED
+                bulletVel = (
+                    user.input.mousePos - user.pos).normalized() * BULLET_SPEED
                 newBullet = Bullet(uid, user.pos, bulletVel)
                 self.bullets.append(newBullet)
                 user.cooldown = BULLET_DELAY
-        
+
         for bullet in self.bullets:
             bullet.update()
-            #if user.input.click:
-            #self.bullets.append(bullet(id, user.x, user.y,
+            # if user.input.click:
+            # self.bullets.append(bullet(id, user.x, user.y,
 
     def getGameState(self):
         data = {'users': [], 'bullets': []}
@@ -162,6 +173,7 @@ lobby = []
 games = {}
 usertogame = {}
 running = False
+
 
 def addUser(user):
     global lobby
@@ -180,15 +192,19 @@ def addUser(user):
         lobby = []
     return user
 
+
 def leftLobby(user):
     return user in lobby
+
 
 def usersGame(user):
     return games[usertogame[user]]
 
+
 def handleEvent(event):
     user = event['user']
     usersGame(user).handleEvent(event)
+
 
 def run():
     global REALTICKTIME, TICKRATE
@@ -200,7 +216,8 @@ def run():
     while(1):
         if debugtime and framecount != 0 and framecount % TICKRATE == 0:
             newlsf = time.time()
-            print 'with TR',TICKRATE,'- 1 second is', newlsf - lastsecondframe
+            print 'with TR', TICKRATE,
+            print '- 1 second is', newlsf - lastsecondframe
             lastsecondframe = newlsf
             framecount = 0
             TICKRATE += 1
@@ -214,11 +231,12 @@ def run():
         # eventlet.sleep(0)
         if debugtime:
             realtime = time.time() - start
-            print 'real sleep time:', realtime, '= 1 /', 1 / realtime, 'sleep time:', sleeptime,
+            print 'real sleep time:', realtime,
+            print '= 1 /', 1 / realtime, 'sleep time:', sleeptime,
             if sleeptime <= 0:
                 print 'tried to sleep <= 0 time',
             print
         framecount += 1
         # time.sleep(1/60.)
 
-#if __name__ == '__main__':
+# if __name__ == '__main__':
