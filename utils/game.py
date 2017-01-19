@@ -99,7 +99,7 @@ class Bullet:
 
 
 class Instance:
-
+    
     def __init__(self, user1, user2):
         self.players = {}
         self.scores = {}

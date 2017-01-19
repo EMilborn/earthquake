@@ -14,10 +14,14 @@ gabrielM -- 2017-01-10 20:20
 Parsed JSON
 
 eliasM -- 2017-01-10 20:20
-updated game mechanics
+added bullets class and created a list in game for them, no shooting yet
 
 nobelG -- 2017-01-11 12:00 
 fixed formatting
+
+eliasM -- 2017-01-12 16:00
+added global variables in game, added basic movement and collision for bullets
+added event listeners for clicking (shooting)
 
 farhanH -- 2017-01-13 21:25
 Added functions that allowed use of images instead of red circle as moving object
@@ -25,5 +29,11 @@ Added functions that allowed use of images instead of red circle as moving objec
 farhanH -- 2017-01-16 13:25
 Updated pictures so it doesn't flash/glitch during movement
 
+eliasM -- 2017-01-17 12:00
+Added bullet delay so shooting is less powerful
+
 nobelG -- 2017-01-18 11:12
 Add lag compensation for when/where the projectile is shot.
+
+eliasM -- 2017-01-18 12:00
+Added mechanics for collisions such as decreasing health etc.,
