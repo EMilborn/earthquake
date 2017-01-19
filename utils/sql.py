@@ -21,8 +21,8 @@ def db_f(func):
 @db_f
 def init(db):
     cur = db.cursor()
-    cur.execute("CREATE TABLE users (id INTEGER, username TEXT, password TEXT)")
-    cur.execute("INSERT INTO users VALUES (-1, '', '')")
+    cur.execute("CREATE TABLE users (id INTEGER, username TEXT, password TEXT, rating INTEGER)")
+    cur.execute("INSERT INTO users VALUES (-1, '', '', 1500)")
     db.commit()
 
 
@@ -30,7 +30,7 @@ def init(db):
 def add_user(db, user, password):
     cur = db.cursor()
     q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\')" % (
-        next_userid(db), user, password)
+        next_userid(db), user, password, 1500)
     print q
     cur.execute(q)
     db.commit()
