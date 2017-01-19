@@ -25,5 +25,8 @@ Added functions that allowed use of images instead of red circle as moving objec
 farhanH -- 2017-01-16 13:25
 Updated pictures so it doesn't flash/glitch during movement
 
+gabrielM -- 2017-01-17
+Added bullet shooting in game and in sockets
+
 nobelG -- 2017-01-18 11:12
 Add lag compensation for when/where the projectile is shot.
