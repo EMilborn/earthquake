@@ -29,7 +29,7 @@ def init(db):
 @db_f
 def add_user(db, user, password):
     cur = db.cursor()
-    q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\')" % (
+    q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\', %d)" % (
         next_userid(db), user, password, 1500)
     print q
     cur.execute(q)
