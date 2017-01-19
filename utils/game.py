@@ -4,10 +4,6 @@ import json
 from random import randint
 import eventlet
 import math
-from lagcomp import LagCompClass
-from vector import Vector
-from player import Player
-from bullet import Bullet
 from gameinstance import Instance, TICKRATE
 # from decimal import getcontext, Decimal
 # from flask import Flask
@@ -30,6 +26,7 @@ def addUser(user):
     print 'adding user to lobby'
     lobby.append(user)
     if len(lobby) == 2:
+        print 'lobby full! starting new game'
         game = Instance(lobby[0], lobby[1])
         gameid = randint(0, 1928374619283746)
         while gameid in games:
