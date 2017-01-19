@@ -78,6 +78,10 @@ socket.on('gamedata', function(json) {
     //console.log(latestGameData)
 });
 
+socket.on('pong', function() {
+    socket.emit('ping2', {'user': id, 'game': gameid});
+});
+
 
 var mouseposmatters = false;
 var mousex = -1;
@@ -142,7 +146,14 @@ document.body.addEventListener("keyup", function(e) {
     }
 })
 
+var framec = 0;
 var mainLoop = function() {
+    framec++;
+    if (framec == 5)
+    {
+        socket.emit("ping", {"user": id, "game": gameid});
+        framec = 0;
+    }
     if (gameid === -1) {
         socket.emit("givegame", {"user": id});
     }

@@ -10,8 +10,10 @@ from random import randint
 import sqlite3
 import os
 import sys
-
-
+import time
+f = "data/users.db"
+db = sqlite3.connect(f)  # open if f exists, otherwise create
+c = db.cursor()
 
 app = Flask(__name__)
 app.secret_key = 'xtrem c-cret kee'
@@ -59,6 +61,25 @@ def gamegiver(json):
 def datagiver(json):
     gameid = json['game']
     emit('gamedata', utils.game.games[gameid].getGameState())
+
+
+@socketio.on('ping')
+def ping(json):
+    user = json['user']
+    gameid = json['game']
+    if gameid == -1:
+        return
+    utils.game.games[gameid].players[user].lastPing = time.time()
+    emit('pong')
+
+@socketio.on('ping2')
+def ping2(json):
+    user = json['user']
+    gameid = json['game']
+    if gameid == -1:
+        return
+    dT = time.time() - utils.game.games[gameid].players[user].lastPing
+    utils.game.games[gameid].players[user].lagcomp.add_latency(dT)
 
 
 @app.route("/login/<var>")

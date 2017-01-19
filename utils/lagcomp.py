@@ -21,7 +21,9 @@ class LagCompClass:
 
     def get_approx_client_state(self):
         now = time.time()
-        then = now - self.get_avg_latency()
+        latency = self.get_avg_latency()
+        then = now - latency/2
+        print "LATENCY", latency
         state = min(self.history, key = lambda x: abs(x[0]-then))
         return state
 
@@ -29,7 +31,7 @@ class LagCompClass:
         now = time.time()
         while len(self.latency) > 0 and (now - self.latency[0][0]) > 2:
             self.latency.popleft()
-        self.latency.append(latency)
+        self.latency.append((time.time(), latency))
 
 
     def get_avg_latency(self):
