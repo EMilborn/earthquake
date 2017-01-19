@@ -69,6 +69,7 @@ def getRating(db, username):
     
 @db_f
 def setRating(username):
+    pass
     
 
 
