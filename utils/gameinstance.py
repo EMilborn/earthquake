@@ -46,7 +46,7 @@ class Instance:
     def gameLoop(self):
         for uid, user in self.players.iteritems():
             if user.health <= 0:
-                self.endgame()
+                self.endGame()
             if user.input.left:
                 user.pos.x -= 1
             if user.input.right:
