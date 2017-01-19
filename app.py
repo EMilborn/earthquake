@@ -15,7 +15,7 @@ db = sqlite3.connect(f)  # open if f exists, otherwise create
 c = db.cursor()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(32)
+app.secret_key = 'xtrem c-cret kee'
 socketio = SocketIO(app)
 
 
@@ -93,5 +93,5 @@ if __name__ == '__main__':
     print 'Starting game thread'
     thread.start_new_thread(utils.game.run, ())
     print 'Started game thread'
-    # app.debug = True
+    app.debug = os.platform() != 'win32'
     socketio.run(app, host='0.0.0.0')
