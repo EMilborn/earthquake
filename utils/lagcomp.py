@@ -33,5 +33,7 @@ class LagCompClass:
 
 
     def get_avg_latency(self):
+        if len(self.latency) == 0:
+            return 0
         return float(sum(self.latency))/len(self.latency)
 
