@@ -16,7 +16,7 @@ Parsed JSON
 eliasM -- 2017-01-10 20:20
 added bullets class and created a list in game for them, no shooting yet
 
-nobelG -- 2017-01-11 12:00 
+nobelG -- 2017-01-11 12:00
 fixed formatting
 
 eliasM -- 2017-01-12 16:00
@@ -28,6 +28,9 @@ Added functions that allowed use of images instead of red circle as moving objec
 
 farhanH -- 2017-01-16 13:25
 Updated pictures so it doesn't flash/glitch during movement
+
+gabrielM -- 2017-01-17
+Added bullet shooting in game and in sockets
 
 eliasM -- 2017-01-17 12:00
 Added bullet delay so shooting is less powerful
