@@ -135,8 +135,13 @@ class Instance:
             user.input.mousePos.x = event['x']
             user.input.mousePos.y = event['y']
 
+    def endGame(self):
+        pass
+    
     def gameLoop(self):
         for uid, user in self.players.iteritems():
+            if health <= 0:
+                self.endgame()
             if user.input.left:
                 user.pos.x -= 1
             if user.input.right:
@@ -163,6 +168,11 @@ class Instance:
 
         for bullet in self.bullets:
             bullet.update()
+            for user in self.players.iteritems():
+                if bullet.collides(user):
+                    self.bullets.remove(bullet)
+
+        
             # if user.input.click:
             # self.bullets.append(bullet(id, user.x, user.y,
 
