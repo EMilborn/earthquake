@@ -93,5 +93,5 @@ if __name__ == '__main__':
     print 'Starting game thread'
     thread.start_new_thread(utils.game.run, ())
     print 'Started game thread'
-    app.debug = os.platform() != 'win32'
+    app.debug = sys.platform != 'win32'
     socketio.run(app, host='0.0.0.0')
