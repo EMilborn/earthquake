@@ -1,19 +1,7 @@
+from vector import Vector
 from player import Player
 from bullet import Bullet
-
-TICKRATE_DEFAULT = 120  # the tickrate that the following numbers are based on
-TICKRATE = 125  # real tickrate, in case we change
-TICKMULT = 1.0 * TICKRATE_DEFAULT / TICKRATE
-
-PLAYER_HEALTH = 100
-PLAYER_SPEED = 3 * TICKMULT
-PLAYER_RADIUS = 25
-
-BULLET_DAMAGE = 10
-BULLET_RADIUS = 5
-BULLET_DELAY = 30 * TICKMULT
-BULLET_SPEED = 10 * TICKMULT
-
+from tick import *
 
 class Instance:
 
@@ -58,7 +46,7 @@ class Instance:
     def gameLoop(self):
         for uid, user in self.players.iteritems():
             if user.health <= 0:
-                self.endgame()
+                self.endGame()
             if user.input.left:
                 user.pos.x -= 1
             if user.input.right:
@@ -70,15 +58,17 @@ class Instance:
             user.cooldown -= 1
             if user.input.mouse1 and user.cooldown < 0:
                 print 'adding a bullet'
-                client_state = user.lagcomp.get_approx_client_state()
-                print "bt time:", client_state[0]
-                pos = client_state[1]
-                mousePos = client_state[2]
+                #client_state = user.lagcomp.get_approx_client_state()
+                #print "bt time:", client_state[0]
+                #pos = client_state[1]
+                #mousePos = client_state[2]
+                pos = user.pos
+                mousePos = user.input.mousePos
                 if mousePos:
-                    bulletVel = (mousePos-pos).normalized() * BULLET_SPEED
+                    bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
                     newBullet = Bullet(uid, pos, bulletVel)
                     self.bullets.append(newBullet)
-                    user.cooldown = BULLET_DELAY
+                    user.cooldown = Bullet.DELAY
 
             user.lagcomp.remove_old_states()
             user.lagcomp.add_state(user.pos, user.input.mousePos)
