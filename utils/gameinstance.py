@@ -58,10 +58,12 @@ class Instance:
             user.cooldown -= 1
             if user.input.mouse1 and user.cooldown < 0:
                 print 'adding a bullet'
-                client_state = user.lagcomp.get_approx_client_state()
-                print "bt time:", client_state[0]
-                pos = client_state[1]
-                mousePos = client_state[2]
+                #client_state = user.lagcomp.get_approx_client_state()
+                #print "bt time:", client_state[0]
+                #pos = client_state[1]
+                #mousePos = client_state[2]
+                pos = user.pos
+                mousePos = user.input.mousePos
                 if mousePos:
                     bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
                     newBullet = Bullet(uid, pos, bulletVel)
