@@ -140,7 +140,7 @@ class Instance:
 
     def gameLoop(self):
         for uid, user in self.players.iteritems():
-            if health <= 0:
+            if user.health <= 0:
                 self.endgame()
             if user.input.left:
                 user.pos.x -= 1
@@ -168,7 +168,7 @@ class Instance:
 
         for bullet in self.bullets:
             bullet.update()
-            for user in self.players.iteritems():
+            for id, user in self.players.iteritems():
                 if bullet.collides(user):
                     self.bullets.remove(bullet)
 
