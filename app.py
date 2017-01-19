@@ -10,9 +10,8 @@ from random import randint
 import sqlite3
 import os
 import sys
-f = "data/users.db"
-db = sqlite3.connect(f)  # open if f exists, otherwise create
-c = db.cursor()
+
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)

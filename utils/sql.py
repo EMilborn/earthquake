@@ -21,18 +21,17 @@ def db_f(func):
 @db_f
 def init(db):
     cur = db.cursor()
-    cur.execute("CREATE TABLE users (id INTEGER, username TEXT, password TEXT, rating INTEGER)")
-    cur.execute("INSERT INTO users VALUES (-1, '', '', 1500)")
+    cur.execute("CREATE TABLE users (id INTEGER, username TEXT, password TEXT, rating FLOAT, wins INTEGER, losses INTEGER)")
+    cur.execute("INSERT INTO users VALUES (-1, '', '', 1500.0, 0, 0)")
     db.commit()
 
 
 @db_f
 def add_user(db, user, password):
     cur = db.cursor()
-    q = "INSERT INTO users VALUES (%d, \'%s\', \'%s\', %d)" % (
-        next_userid(db), user, password, 1500)
-    print q
-    cur.execute(q)
+    q = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)"
+    
+    cur.execute(q, (next_userid(db), user, password, 1500.0, 0, 0))
     db.commit()
 
 
@@ -62,8 +61,14 @@ def next_userid(db):
         'SELECT id FROM users')]
     return max(uids) + 1
 
+@db_f
+def getRating(db, username):
+    cur = db.cursor()
+    res = cur.execute("SELECT rating FROM users WHERE username = '" + username + "'")
+    return res[0]
+    
+@db_f
+def setRating(username):
+    
 
-try:
-    init()
-except:
-    pass
+

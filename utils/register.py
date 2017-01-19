@@ -5,8 +5,11 @@ import os
 import sqlite3
 from utils import sql
 
+
 f = "data/users.db"
 db = sqlite3.connect(f)  # open if f exists, otherwise create
+if not os.path.exists(f):
+    sql.init(db)
 c = db.cursor()
 
 
