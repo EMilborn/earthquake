@@ -137,7 +137,7 @@ class Instance:
 
     def endGame(self):
         pass
-    
+
     def gameLoop(self):
         for uid, user in self.players.iteritems():
             if health <= 0:
@@ -172,7 +172,6 @@ class Instance:
                 if bullet.collides(user):
                     self.bullets.remove(bullet)
 
-        
             # if user.input.click:
             # self.bullets.append(bullet(id, user.x, user.y,
 
