@@ -1,4 +1,7 @@
 from lagcomp import LagCompClass
+from vector import Vector
+from tick import TICKMULT
+
 
 class PlayerInput:
 
@@ -13,10 +16,14 @@ class PlayerInput:
 
 class Player:
 
+    SPEED = 3 * TICKMULT
+    RADIUS = 25
+    HEALTH = 100
+
     def __init__(self, id):
         self.pos = Vector(-1, -1)
         self.input = PlayerInput()
         self.userid = id
-        self.health = PLAYER_HEALTH
+        self.health = self.HEALTH
         self.cooldown = 0
         self.lagcomp = LagCompClass()

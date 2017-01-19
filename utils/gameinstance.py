@@ -1,19 +1,7 @@
+from vector import Vector
 from player import Player
 from bullet import Bullet
-
-TICKRATE_DEFAULT = 120  # the tickrate that the following numbers are based on
-TICKRATE = 125  # real tickrate, in case we change
-TICKMULT = 1.0 * TICKRATE_DEFAULT / TICKRATE
-
-PLAYER_HEALTH = 100
-PLAYER_SPEED = 3 * TICKMULT
-PLAYER_RADIUS = 25
-
-BULLET_DAMAGE = 10
-BULLET_RADIUS = 5
-BULLET_DELAY = 30 * TICKMULT
-BULLET_SPEED = 10 * TICKMULT
-
+from tick import *
 
 class Instance:
 
@@ -75,10 +63,10 @@ class Instance:
                 pos = client_state[1]
                 mousePos = client_state[2]
                 if mousePos:
-                    bulletVel = (mousePos-pos).normalized() * BULLET_SPEED
+                    bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
                     newBullet = Bullet(uid, pos, bulletVel)
                     self.bullets.append(newBullet)
-                    user.cooldown = BULLET_DELAY
+                    user.cooldown = Bullet.DELAY
 
             user.lagcomp.remove_old_states()
             user.lagcomp.add_state(user.pos, user.input.mousePos)

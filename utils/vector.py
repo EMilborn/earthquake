@@ -1,3 +1,6 @@
+import math
+
+
 class Vector:  # represents 2D vector
 
     def __init__(self, x, y):
