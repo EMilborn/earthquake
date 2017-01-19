@@ -1,0 +1,16 @@
+Lag compensation model for projectiles.
+
+server:
+history =
+[t_-n : pos
+ ...
+ t_0  : pos]
+
+client:
+poll click -> send fire -> client-prediction -> correction
+
+server:
+recv fire -> distribute bullets with pos at history[now-lag]
+
+client2:
+recv bullet -> draw -> prediction -> correction

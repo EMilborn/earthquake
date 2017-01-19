@@ -39,7 +39,6 @@ def gotmessage(msg):
 
 @socketio.on('input')
 def handle_input(obj):
-    print 'handling input'
     utils.game.handleEvent(obj)
 
 

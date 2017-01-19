@@ -4,6 +4,8 @@ import json
 from random import randint
 import eventlet
 import math
+from lagcomp import LagCompClass
+
 # from decimal import getcontext, Decimal
 # from flask import Flask
 # app =
@@ -23,7 +25,6 @@ BULLET_DAMAGE = 10
 BULLET_RADIUS = 5
 BULLET_DELAY = 30 * TICKMULT
 BULLET_SPEED = 10 * TICKMULT
-
 
 class Vector:  # represents 2D vector
 
@@ -76,6 +77,7 @@ class Player:
         self.userid = id
         self.health = PLAYER_HEALTH
         self.cooldown = 0
+        self.lagcomp = LagCompClass()
 
 
 class Bullet:
@@ -144,14 +146,20 @@ class Instance:
             if user.input.down:
                 user.pos.y += 1
             user.cooldown -= 1
-            if user.input.mouse1 and user.input.mousePos is not None \
-                    and user.cooldown < 0:
+            if user.input.mouse1 and user.cooldown < 0:
                 print 'adding a bullet'
-                bulletVel = (
-                    user.input.mousePos - user.pos).normalized() * BULLET_SPEED
-                newBullet = Bullet(uid, user.pos, bulletVel)
-                self.bullets.append(newBullet)
-                user.cooldown = BULLET_DELAY
+                client_state = user.lagcomp.get_approx_client_state()
+                print "bt time:", client_state[0]
+                pos = client_state[1]
+                mousePos = client_state[2]
+                if mousePos:
+                    bulletVel = (mousePos-pos).normalized() * BULLET_SPEED
+                    newBullet = Bullet(uid, pos, bulletVel)
+                    self.bullets.append(newBullet)
+                    user.cooldown = BULLET_DELAY
+
+            user.lagcomp.remove_old_states()
+            user.lagcomp.add_state(user.pos, user.input.mousePos)
 
         for bullet in self.bullets:
             bullet.update()
