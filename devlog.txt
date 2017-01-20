@@ -40,3 +40,8 @@ Add lag compensation for when/where the projectile is shot.
 
 eliasM -- 2017-01-18 12:00
 Added mechanics for collisions such as decreasing health etc.,
+
+nobelG -- 2017-01-20
+Add latency tests and way to average last N seconds of latency data.
+Fix database creation problem.
+Limit lag compensation to 200ms.

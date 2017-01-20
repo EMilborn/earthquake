@@ -68,8 +68,30 @@ def getRating(db, username):
     return res[0]
 
 @db_f
-def setRating(username):
-    pass
+def setRating(db, username, rating):
+    cur = db.cursor()
+    old = getRating(db, username)
+    cur.execute("UPDATE users SET rating=" + rating + " WHERE username = '" + username + "'")
+    return old
 
+@db_f
+def getRecord(db, username):
+    cur = db.cursor()
+    res = cur.execute("SELECT wins, losses FROM users WHERE username = '" + username + "'")
+    return res[0]
 
+@db_f
+def addWin(db, username):
+    wins = getRecord(db, username)[0]
+
+    cur = db.cursor()
+    cur.execute("UPDATE users SET wins=" + (wins + 1) + " WHERE username = '" + username + "'")
+    return wins
+
+@db_f
+def addLoss(db, username):
+    losses = getRecord(db, username)[1]
+    cur = db.cursor()
+    cur.execute("UPDATE users SET losses=" + (losses + 1) + " WHERE username = '" + username + "'")
+    return losses
 

@@ -2,6 +2,7 @@ from vector import Vector
 from player import Player
 from bullet import Bullet
 from tick import *
+import time
 
 class Instance:
 
@@ -41,28 +42,32 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
+        
         pass
 
     def gameLoop(self):
         for uid, user in self.players.iteritems():
+            user.lagcomp.remove_old_states()
+            user.lagcomp.add_state(user.pos)
             if user.health <= 0:
                 self.endGame()
             if user.input.left:
-                user.pos.x -= 1
+                user.pos.x = max(0, min(800, user.pos.x-1))
             if user.input.right:
-                user.pos.x += 1
+                user.pos.x = max(0, min(800, user.pos.x+1))
             if user.input.up:
-                user.pos.y -= 1
+                user.pos.y = max(0, min(800, user.pos.y-1))
             if user.input.down:
-                user.pos.y += 1
+                user.pos.y = max(0, min(800, user.pos.y+1))
             user.cooldown -= 1
             if user.input.mouse1 and user.cooldown < 0:
-                print 'adding a bullet'
-                #client_state = user.lagcomp.get_approx_client_state()
-                #print "bt time:", client_state[0]
-                #pos = client_state[1]
-                #mousePos = client_state[2]
-                pos = user.pos
+                client_state = user.lagcomp.get_approx_client_state()
+                if client_state != -1:
+                    print "bt time:", client_state[0]
+                    print "now:", time.time()
+                    pos = client_state[1]
+                else:
+                    pos = user.pos
                 mousePos = user.input.mousePos
                 if mousePos:
                     bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
@@ -70,8 +75,6 @@ class Instance:
                     self.bullets.append(newBullet)
                     user.cooldown = Bullet.DELAY
 
-            user.lagcomp.remove_old_states()
-            user.lagcomp.add_state(user.pos, user.input.mousePos)
 
         for bullet in self.bullets:
             bullet.update()
