@@ -51,13 +51,13 @@ class Instance:
             if user.health <= 0:
                 self.endGame()
             if user.input.left:
-                user.pos.x -= 1
+                user.pos.x = max(0, min(800, user.pos.x-1))
             if user.input.right:
-                user.pos.x += 1
+                user.pos.x = max(0, min(800, user.pos.x+1))
             if user.input.up:
-                user.pos.y -= 1
+                user.pos.y = max(0, min(800, user.pos.y-1))
             if user.input.down:
-                user.pos.y += 1
+                user.pos.y = max(0, min(800, user.pos.y+1))
             user.cooldown -= 1
             if user.input.mouse1 and user.cooldown < 0:
                 client_state = user.lagcomp.get_approx_client_state()
