@@ -11,9 +11,6 @@ import sqlite3
 import os
 import sys
 import time
-f = "data/users.db"
-db = sqlite3.connect(f)  # open if f exists, otherwise create
-c = db.cursor()
 
 app = Flask(__name__)
 app.secret_key = 'xtrem c-cret kee'
@@ -109,6 +106,12 @@ def bye():
     return redirect(url_for('main'))
 
 if __name__ == '__main__':
+    f = "data/users.db"
+    if not os.path.exists(f) or os.path.getsize(f) == 0:
+        db = sqlite3.connect(f)
+        sql.init(db)
+        db.close()
+
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
     print 'Starting game thread'
     thread.start_new_thread(utils.game.run, ())

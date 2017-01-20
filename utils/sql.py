@@ -30,7 +30,7 @@ def init(db):
 def add_user(db, user, password):
     cur = db.cursor()
     q = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)"
-    
+
     cur.execute(q, (next_userid(db), user, password, 1500.0, 0, 0))
     db.commit()
 
@@ -66,10 +66,10 @@ def getRating(db, username):
     cur = db.cursor()
     res = cur.execute("SELECT rating FROM users WHERE username = '" + username + "'")
     return res[0]
-    
+
 @db_f
 def setRating(username):
     pass
-    
+
 
 

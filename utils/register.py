@@ -5,11 +5,9 @@ import os
 import sqlite3
 from utils import sql
 
-
+#File guaranteed by app.py.
 f = "data/users.db"
-db = sqlite3.connect(f)  # open if f exists, otherwise create
-if not os.path.exists(f):
-    sql.init(db)
+db = sqlite3.connect(f)
 c = db.cursor()
 
 
