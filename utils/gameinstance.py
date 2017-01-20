@@ -41,6 +41,7 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
+        
         pass
 
     def gameLoop(self):
