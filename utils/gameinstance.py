@@ -2,7 +2,9 @@ from vector import Vector
 from player import Player
 from bullet import Bullet
 from tick import *
+import elo
 import time
+import sql
 
 class Instance:
 
@@ -42,8 +44,15 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
-        
-        pass
+        if players[0].health <= 0:
+            elo.update(players[1].userid, players[0].userid)
+            sql.addWin(users.db, players[1].userid)
+            sql.addLoss(users.db, players[0].userid)
+            
+        else if players[1].health <= 0:
+            elo.update(players[0].userid, players[1].userid)
+            sql.addWin(users.db, players[0].userid)
+            sql.addLoss(users.db, players[1].userid)
 
     def gameLoop(self):
         for uid, user in self.players.iteritems():
