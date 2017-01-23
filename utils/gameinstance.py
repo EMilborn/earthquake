@@ -63,8 +63,6 @@ class Instance:
             if user.input.mouse1 and user.cooldown < 0:
                 client_state = user.lagcomp.get_approx_client_state()
                 if client_state != -1:
-                    print "bt time:", client_state[0]
-                    print "now:", time.time()
                     pos = client_state[1]
                 else:
                     pos = user.pos
