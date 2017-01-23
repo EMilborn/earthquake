@@ -45,3 +45,4 @@ nobelG -- 2017-01-20
 Add latency tests and way to average last N seconds of latency data.
 Fix database creation problem.
 Limit lag compensation to 200ms.
+Bound player location to 800x800 square. Needs to change per map if we get maps.

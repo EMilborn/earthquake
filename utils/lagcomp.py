@@ -25,7 +25,6 @@ class LagCompClass:
         now = time.time()
         latency = min(0.2, self.get_avg_latency())
         then = now - latency/2
-        print "LATENCY", latency
         state = min(self.history, key = lambda x: abs(x[0]-then))
         return state
 
