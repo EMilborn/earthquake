@@ -14,6 +14,7 @@ class Instance:
         self.bullets = []
         self.addUser(user1)
         self.addUser(user2)
+        self.isOver = False
 
     def addUser(self, uid):
         print 'adding user to game'
@@ -44,15 +45,17 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
-        if players[0].health <= 0:
-            elo.update(players[1].userid, players[0].userid)
-            sql.addWin(users.db, players[1].userid)
-            sql.addLoss(users.db, players[0].userid)
+        if self.players[0].health <= 0:
+            elo.update(self.players[1].userid, self.players[0].userid)
+            sql.addWin("users.db", self.players[1].userid)
+            sql.addLoss("users.db", self.players[0].userid)
+            self.isOver = True
             
-        else if players[1].health <= 0:
-            elo.update(players[0].userid, players[1].userid)
-            sql.addWin(users.db, players[0].userid)
-            sql.addLoss(users.db, players[1].userid)
+        elif self.players[1].health <= 0:
+            elo.update(self.players[0].userid, self.players[1].userid)
+            sql.addWin("users.db", self.players[0].userid)
+            sql.addLoss("users.db", self.players[1].userid)
+            self.isOver = true
 
     def gameLoop(self):
         for uid, user in self.players.iteritems():

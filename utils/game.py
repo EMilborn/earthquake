@@ -63,6 +63,8 @@ def run():
         start = time.time()
         for gid, game in games.iteritems():
             game.gameLoop()
+            if game.isOver:
+                games.pop(gid, None)
         eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
         framecount += 1
 
