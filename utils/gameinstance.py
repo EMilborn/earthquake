@@ -2,7 +2,9 @@ from vector import Vector
 from player import Player
 from bullet import Bullet
 from tick import *
+import elo
 import time
+import sql
 
 class Instance:
 
@@ -12,6 +14,8 @@ class Instance:
         self.bullets = []
         self.addUser(user1)
         self.addUser(user2)
+        self.isOver = False
+        self.spawnPlayers()
 
     def addUser(self, uid):
         print 'adding user to game'
@@ -42,36 +46,52 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
-        
-        pass
+        self.isOver = True
+
+    def spawnPlayers(self):
+        first = 0
+        for uid, user in self.players.iteritems():
+            user.pos = Vector(first * 500 + 100, first * 500 + 100)
+            user.restartInput()
+            user.health = Player.HEALTH
+            first += 1
+        self.bullets = []  # kill current bullets
 
     def gameLoop(self):
         for uid, user in self.players.iteritems():
             user.lagcomp.remove_old_states()
             user.lagcomp.add_state(user.pos)
             if user.health <= 0:
-                self.endGame()
-            if user.input.left:
-                user.pos.x = max(0, min(800, user.pos.x-1))
-            if user.input.right:
-                user.pos.x = max(0, min(800, user.pos.x+1))
-            if user.input.up:
-                user.pos.y = max(0, min(800, user.pos.y-1))
-            if user.input.down:
-                user.pos.y = max(0, min(800, user.pos.y+1))
-            user.cooldown -= 1
-            if user.input.mouse1 and user.cooldown < 0:
-                client_state = user.lagcomp.get_approx_client_state()
-                if client_state != -1:
-                    pos = client_state[1]
+                self.scores[uid] += 1
+                if self.scores[uid] > 4:  # this player loses
+                    self.endGame()
+                    return
                 else:
-                    pos = user.pos
-                mousePos = user.input.mousePos
-                if mousePos:
-                    bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
-                    newBullet = Bullet(uid, pos, bulletVel)
-                    self.bullets.append(newBullet)
-                    user.cooldown = Bullet.DELAY
+                    self.spawnPlayers()
+            if user.input.lockTime <= 0:
+                if user.input.left:
+                    user.pos.x = max(0, min(800, user.pos.x-1))
+                if user.input.right:
+                    user.pos.x = max(0, min(800, user.pos.x+1))
+                if user.input.up:
+                    user.pos.y = max(0, min(800, user.pos.y-1))
+                if user.input.down:
+                    user.pos.y = max(0, min(800, user.pos.y+1))
+                user.cooldown -= 1
+                if user.input.mouse1 and user.cooldown < 0:
+                    client_state = user.lagcomp.get_approx_client_state()
+                    if client_state != -1:
+                        pos = client_state[1]
+                    else:
+                        pos = user.pos
+                    mousePos = user.input.mousePos
+                    if mousePos:
+                        bulletVel = (mousePos-pos).normalized() * Bullet.SPEED
+                        newBullet = Bullet(uid, pos, bulletVel)
+                        self.bullets.append(newBullet)
+                        user.cooldown = Bullet.DELAY
+            else:
+                user.input.lockTime -= 1
 
 
         for bullet in self.bullets:

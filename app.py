@@ -26,8 +26,13 @@ def main():
 
 @app.route('/home/')
 def home():
-    id = utils.game.addUser(session['user'] + str(randint(1, 1000000)))
-    return render_template('index.html', id=id)
+    id = utils.game.addUser(session['user'] + str(randint(1, 1000000)), session['user'])
+    return render_template('index.html', id=id, name=session['user'])
+		
+@app.route('/player/')
+def player():
+		user = session['user']
+		return render_template('player.html', user = user)
 
 
 @socketio.on('message')
@@ -49,7 +54,7 @@ def connecter():
 @socketio.on('givegame')
 def gamegiver(json):
     user = json['user']
-    if user in utils.game.usertogame:
+    if user in utils.game.usertogame and utils.game.usertogame[user] != -1:
         print 'user is in game, sending join'
         emit('join', utils.game.usertogame[json['user']])
 
@@ -57,14 +62,15 @@ def gamegiver(json):
 @socketio.on('givedata')
 def datagiver(json):
     gameid = json['game']
-    emit('gamedata', utils.game.games[gameid].getGameState())
+    uid = json['user']
+    emit('gamedata', utils.game.getState(uid, gameid))
 
 
 @socketio.on('ping')
 def ping(json):
     user = json['user']
     gameid = json['game']
-    if gameid == -1:
+    if gameid == -1 or gameid not in utils.game.games:
         return
     utils.game.games[gameid].players[user].lastPing = time.time()
     emit('pong')

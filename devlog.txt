@@ -46,3 +46,12 @@ Add latency tests and way to average last N seconds of latency data.
 Fix database creation problem.
 Limit lag compensation to 200ms.
 Bound player location to 800x800 square. Needs to change per map if we get maps.
+
+eliasM -- 2017-01-19 16:00
+Started work on elo system, created elo.py. Made minor changes to database so it has elo, wins, and losses column
+
+eliasM -- 2017-01-20 12:00
+Fully wrote elo.py and added methods in sql.py necessary to updating elo, wins, and losses
+
+farhanH -- 2017-01-24 21:25
+Added css to index.html and created player.html. Linked new pages together.
