@@ -28,6 +28,11 @@ def main():
 def home():
     id = utils.game.addUser(session['user'] + str(randint(1, 1000000)), session['user'])
     return render_template('index.html', id=id, name=session['user'])
+		
+@app.route('/player/')
+def player():
+		user = session['user']
+		return render_template('player.html', user = user)
 
 
 @socketio.on('message')
