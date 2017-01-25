@@ -32,7 +32,9 @@ def home():
 @app.route('/player/')
 def player():
 		user = session['user']
-		return render_template('player.html', user = user)
+                rec = sql.getRecord(user)
+                rat = sql.getRating(user)
+		return render_template('player.html', user = user, win = rec[0], loss = rec[1], rating = rat )
 
 
 @socketio.on('message')
