@@ -55,3 +55,6 @@ Fully wrote elo.py and added methods in sql.py necessary to updating elo, wins, 
 
 farhanH -- 2017-01-24 21:25
 Added css to index.html and created player.html. Linked new pages together.
+
+farhanH -- 2017-01-25 17:50
+Centered Player Viewport, and bullet offset
