@@ -57,14 +57,15 @@ def gamegiver(json):
 @socketio.on('givedata')
 def datagiver(json):
     gameid = json['game']
-    emit('gamedata', utils.game.games[gameid].getGameState())
+    uid = json['user']
+    emit('gamedata', utils.game.getState(uid, gameid))
 
 
 @socketio.on('ping')
 def ping(json):
     user = json['user']
     gameid = json['game']
-    if gameid == -1:
+    if gameid == -1 or gameid not in utils.game.games:
         return
     utils.game.games[gameid].players[user].lastPing = time.time()
     emit('pong')

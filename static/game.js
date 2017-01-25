@@ -83,6 +83,8 @@ socket.on('gamedata', function(json) {
     //console.log('got that data')
     //tempMsg('Got gamedata', 500);
     latestGameData = json;
+    if(latestGameData === -1)
+        location.reload(true);  // we aren't registered as a user
     //console.log(latestGameData)
 });
 
@@ -169,9 +171,9 @@ var mainLoop = function() {
         ctx.fillText("Waiting for game...", width / 2, height / 2);
     }
     else if (state === 'PLAYING') {
-        socket.emit("givedata", {"game": gameid});
+        socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
-        if (d !== 0) {
+        if (d !== 0 && d !== 1 && d !== -1) {
             users = d.users;
             bullets = d.bullets;
             ctx.clearRect(0, 0, canvas.width, canvas.height);

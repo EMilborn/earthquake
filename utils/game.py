@@ -14,29 +14,33 @@ TICKTIME = 1.0 / TICKRATE
 REALTICKTIME = float(TICKTIME)  # possibly will be used to account for some time lag
 
 
-users = {}
+users = []
 lobby = []
 games = {}
 usertogame = {}
 running = False
 
 
-def addUser(user):
-    global lobby
-    print 'adding user to lobby'
+def moveToGame(u1, u2):
+    game = Instance(u1, u2)
+    gameid = randint(0, 1010101010101010)
+    while gameid in games:
+        gameid = randint(0, 1010101010101010)
+    games[gameid] = game
+    usertogame[u1] = gameid
+    usertogame[u2] = gameid
+
+def moveToLobby(user):
+    usertogame[user] = -1
     lobby.append(user)
-    if len(lobby) == 2:
-        print 'lobby full! starting new game'
-        game = Instance(lobby[0], lobby[1])
-        gameid = randint(0, 1928374619283746)
-        while gameid in games:
-            gameid = randint(0, 1928374619283746)
-        games[gameid] = game
-        usertogame[lobby[0]] = gameid
-        usertogame[lobby[1]] = gameid
-        # app.send_joinlobby(lobby[0], gameid)
-        # app.send_joinlobby(lobby[1], gameid)
-        lobby = []
+    if len(lobby) == 2:  # we can change cond for moving to game later
+        moveToGame(lobby[0], lobby[1])
+        lobby[:] = []
+
+
+def addUser(user):
+    users.append(user)
+    moveToLobby(user)
     return user
 
 
@@ -45,12 +49,22 @@ def leftLobby(user):
 
 
 def usersGame(user):
-    return games[usertogame[user]]
+    if user in usertogame and usertogame[user] != -1:
+        return games[usertogame[user]]
 
 
 def handleEvent(event):
     user = event['user']
-    usersGame(user).handleEvent(event)
+    game = usersGame(user)
+    if game is not None:
+        game.handleEvent(event)
+
+def getState(uid, gameid):
+    if uid not in users:
+        return -1
+    if gameid not in games:
+        return 1
+    return games[gameid].getGameState()
 
 
 def run():
@@ -65,6 +79,8 @@ def run():
             game.gameLoop()
             if game.isOver:
                 games.pop(gid, None)
+                for uid, user in game.players.iteritems():
+                    moveToLobby(uid)  # right now, the players will be put back in a game with each other lol
         eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
         framecount += 1
 

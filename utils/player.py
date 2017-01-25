@@ -12,6 +12,7 @@ class PlayerInput:
         self.left = False
         self.mouse1 = False
         self.mousePos = None
+        self.lockTime = 0  # used for stopping movement at beginning of a round
 
 
 class Player:
@@ -27,3 +28,7 @@ class Player:
         self.health = self.HEALTH
         self.cooldown = 0
         self.lagcomp = LagCompClass()
+
+    def restartInput(self):
+        self.input = PlayerInput()
+        self.input.lockTime = 360 * TICKMULT  # 3 second lock
