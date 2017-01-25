@@ -166,7 +166,7 @@ var mainLoop = function() {
         console.log("began queueing");
         socket.emit("givegame", {"user": id});
         ctx.font = "30px Arial";
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "red";
         ctx.textAlign = "center";
         ctx.fillText("Waiting for game...", width / 2, height / 2);
     }
