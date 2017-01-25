@@ -5,6 +5,8 @@ from random import randint
 import eventlet
 import math
 from gameinstance import Instance, TICKRATE
+import sql
+import elo
 # from decimal import getcontext, Decimal
 # from flask import Flask
 # app =
@@ -14,7 +16,7 @@ TICKTIME = 1.0 / TICKRATE
 REALTICKTIME = float(TICKTIME)  # possibly will be used to account for some time lag
 
 
-users = []
+users = {}  # nickname -> real name
 lobby = []
 games = {}
 usertogame = {}
@@ -38,8 +40,8 @@ def moveToLobby(user):
         lobby[:] = []
 
 
-def addUser(user):
-    users.append(user)
+def addUser(user, realName):
+    users[user] = realName
     moveToLobby(user)
     return user
 
@@ -66,6 +68,19 @@ def getState(uid, gameid):
         return 1
     return games[gameid].getGameState()
 
+def updateElo(scores):
+
+    for uid, score in scores.iteritems():
+        if score > 4:
+            lose = uid
+        else:
+            win = uid
+    winnerId = users[win]
+    loserId = users[lose]
+    elo.update(winnerId, loserId)
+    sql.addWin(winnerId)
+    sql.addLoss(loserId)
+
 
 def run():
     print "Running at", TICKRATE, "Hz"
@@ -78,6 +93,7 @@ def run():
         for gid, game in games.iteritems():
             game.gameLoop()
             if game.isOver:
+                updateElo(game.scores)
                 games.pop(gid, None)
                 for uid, user in game.players.iteritems():
                     moveToLobby(uid)  # right now, the players will be put back in a game with each other lol

@@ -46,21 +46,7 @@ class Instance:
             user.input.mousePos.y = event['y']
 
     def endGame(self):
-        key0, key1 = tuple(self.players.keys())
-        if self.players[key0].health <= 0:
-            elo.update(self.players[key1].userid, self.players[key0].userid)
-            sql.addWin("users.db", self.players[key1].userid)
-            sql.addLoss("users.db", self.players[key0].userid)
-            self.isOver = True
-
-        elif self.players[key1].health <= 0:
-            elo.update(self.players[key0].userid, self.players[key1].userid)
-            sql.addWin("users.db", self.players[key0].userid)
-            sql.addLoss("users.db", self.players[key1].userid)
-            self.isOver = true
-
-        else:
-            print "No users dead, but in endgame?"
+        self.isOver = True
 
     def spawnPlayers(self):
         first = 0
