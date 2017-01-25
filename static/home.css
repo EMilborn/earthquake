@@ -3,7 +3,10 @@ body{
 }
 
 #gamecanvas{
-  border: solid 4px red;  
+  border: solid 4px red;
+    padding: 0;
+    margin: auto;
+    display: block;  
 }
 
 h4{

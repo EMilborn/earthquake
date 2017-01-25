@@ -143,8 +143,8 @@ canvas.addEventListener("mouseup", function(e) {
 });
 
 canvas.addEventListener("mousemove", function(e) {
-    mousex = e.pageX;
-    mousey = e.pageY;
+    mousex = e.offsetX;
+    mousey = e.offsetY;
     if(mouseposmatters) {
         sendMousePos();
     }
