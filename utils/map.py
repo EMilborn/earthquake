@@ -8,7 +8,7 @@ def dist_sq_line_point(e1, e2, point):  # like project but more efficient
     line_len = linevec.lengthSquared()
     dotNorm = linevec.dot(point - e1) * 1.0 / line_len
     cappedDotNorm = max(0, min(1, dotNorm))
-    project = e1 + linevec * cappedDotNorm 
+    project = e1 + linevec * cappedDotNorm
     return (project - point).lengthSquared(), e1 + linevec * dotNorm, dotNorm
 
 class Map:
