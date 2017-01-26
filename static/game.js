@@ -45,7 +45,7 @@ drawPlayer = function(myX, myY, x, y) {
 
 drawBullet = function(myX, myY, x, y) {
     var o = getOffsets(myX, myY);
-    drawCircle(x + o.x, y + o.y, 5, "blue");
+    drawCircle(x + o.x, y + o.y, 10, "blue");
 }
 
 drawMap = function(myX, myY) {  // draws map based on where player currently is

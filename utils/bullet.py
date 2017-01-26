@@ -3,9 +3,9 @@ from tick import TICKMULT
 class Bullet:
 
     DAMAGE = 10
-    RADIUS = 5
+    RADIUS = 10
     DELAY = 30 * TICKMULT
-    SPEED = 10 * TICKMULT
+    SPEED = min(10 * TICKMULT, RADIUS * 2 - 0.1)  # has to be < radius*2 for collision
 
     def __init__(self, id, pos, vel):
         self.pos = pos
@@ -15,9 +15,8 @@ class Bullet:
     def update(self):
         self.pos += self.vel
 
-    def collides(self, player):  # xxx add line stuff
+    def collides(self, player):
         if (self.pos - player.pos).lengthSquared()  \
                 <= (self.RADIUS + player.RADIUS) ** 2 \
                 and self.owner != player.userid:
-            player.health -= self.DAMAGE
             return True

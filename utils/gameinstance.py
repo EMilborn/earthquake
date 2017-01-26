@@ -8,6 +8,12 @@ import sql
 from map import MapPicker
 
 
+LEFT = Vector(-Player.SPEED, 0)
+UP = Vector(0, -Player.SPEED)
+RIGHT = Vector(Player.SPEED, 0)
+DOWN = Vector(0, Player.SPEED)
+
+
 class Instance:
 
     def __init__(self, user1, user2):
@@ -73,14 +79,17 @@ class Instance:
                 else:
                     self.spawnPlayers()
             if user.input.lockTime <= 0:
+                velocity = Vector(0,0)
                 if user.input.left:
-                    user.pos.x = max(0, min(800, user.pos.x-1))
+                    velocity += LEFT
                 if user.input.right:
-                    user.pos.x = max(0, min(800, user.pos.x+1))
+                    velocity += RIGHT
                 if user.input.up:
-                    user.pos.y = max(0, min(800, user.pos.y-1))
+                    velocity += UP
                 if user.input.down:
-                    user.pos.y = max(0, min(800, user.pos.y+1))
+                    velocity += DOWN
+                velocity = self.myMap.collides(user.pos, velocity, Player.RADIUS)
+                user.pos += velocity
                 user.cooldown -= 1
                 if user.input.mouse1 and user.cooldown < 0:
                     client_state = user.lagcomp.get_approx_client_state()
@@ -103,6 +112,11 @@ class Instance:
             for id, user in self.players.iteritems():
                 if bullet.collides(user):
                     self.bullets.remove(bullet)
+                    user.health -= Bullet.DAMAGE
+                    continue
+            if self.myMap.collides(bullet.pos, Vector(0,0), Bullet.RADIUS, True):
+                self.bullets.remove(bullet)
+
 
             # if user.input.click:
             # self.bullets.append(bullet(id, user.x, user.y,

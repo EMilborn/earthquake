@@ -3,12 +3,13 @@ import glob
 import random
 from vector import Vector
 
-def dist_line_point(e1, e2, point):
+def dist_sq_line_point(e1, e2, point):  # like project but more efficient
     linevec = e2 - e1
     line_len = linevec.lengthSquared()
-    dotNorm = max(0, min(1, linevec.dot(point - e1) / line_len))
-    project = e1 + linevec * dotNorm 
-    return (project - point).length()
+    dotNorm = linevec.dot(point - e1) * 1.0 / line_len
+    cappedDotNorm = max(0, min(1, dotNorm))
+    project = e1 + linevec * cappedDotNorm 
+    return (project - point).lengthSquared(), e1 + linevec * dotNorm, dotNorm
 
 class Map:
     def __init__(self, fn=""):
@@ -26,13 +27,28 @@ class Map:
         return str(self.layout)
 
 
-
-    def collides(self, pos, r):  # tests if this map collides with circle at pos, radius r
+    def collides(self, pos, vel, r, yOrN=False):  # tests if this map collides with circle at pos + vel, radius r, and says what new vel should be
+        rsq = r ** 2
+        projectionN = 0
+        origvel = vel
         for e1, e2 in self.vecs:
-            d = dist(e1, e2, pos)
-            if d < r:
-                return True
-        return False
+            d, projection, dn = dist_sq_line_point(e1, e2, pos + vel)
+            projdir = e2 - e1
+            #projection = projdir + e1
+            if d < rsq:  # wall collision
+                if yOrN:
+                    return True
+                projectionN += 1
+                #  just go to perpendicular to projection on wall, not accurate but only 1 tick
+                direction = projdir.rotated90CCW()
+                if (pos - e1).isClockwiseOf(projdir):
+                    direction = -direction
+                newPos = direction.normalized() * r + projection
+                print pos, pos + vel, newPos
+                vel = newPos - pos
+        if yOrN:
+            return False
+        return vel
 
 
 class MapPicker:
