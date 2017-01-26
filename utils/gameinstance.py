@@ -24,9 +24,9 @@ class Instance:
         self.addUser(user1)
         self.addUser(user2)
         self.isOver = False
-        self.spawnPlayers()
         self.myMap = MapPicker().rand_map()
-
+        self.spawnPlayers()
+        
 
     def addUser(self, uid):
         print 'adding user to game'
@@ -62,7 +62,7 @@ class Instance:
     def spawnPlayers(self):
         first = 0
         # scramble spawns, in case players aren't scrambled
-        spawns = myMap.spawns[::randint(0,1) * 2 - 1]
+        spawns = self.myMap.spawns[::randint(0,1) * 2 - 1]
         for uid, user in self.players.iteritems():
             user.pos = spawns[first]
             user.restartInput()
