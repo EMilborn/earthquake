@@ -17,6 +17,9 @@ class Vector:  # represents 2D vector
         l = self.length()
         return self / self.length()
 
+    def dot(self, vec2):
+        return self.x * vec2.x + self.y * vec2.y
+
     def __add__(self, vec2):
         return Vector(self.x + vec2.x, self.y + vec2.y)
 
