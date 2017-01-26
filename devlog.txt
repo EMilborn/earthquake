@@ -56,5 +56,24 @@ Fully wrote elo.py and added methods in sql.py necessary to updating elo, wins, 
 farhanH -- 2017-01-24 21:25
 Added css to index.html and created player.html. Linked new pages together.
 
+gabrielM -- 2017-01-24 22:51
+Add rounds
+
 farhanH -- 2017-01-25 17:50
 Centered Player Viewport, and bullet offset
+Updated player page.
+
+nobelG -- 2017-01-25
+Add map functionality.
+Add map based on de_dust2's long.
+Show "Starting in 3.." upon round end.
+
+eliasM -- 2017-01-25 23:33
+Fix elo.
+Add infA.map, inspired by de_inferno's A site.
+
+gabrielM -- 2017-01-25
+Change map system to use coordinates.
+Collision for map.
+Add maps.
+Add colors as health indicator.
