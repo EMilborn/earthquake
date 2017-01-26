@@ -50,7 +50,6 @@ def get_all_users(db):
     L = []
     for row in res:
         L += [[row[1], row[2]]]
-    db.commit()
     return L
 
 
@@ -72,6 +71,7 @@ def setRating(db, username, rating):
     cur = db.cursor()
     old = getRating(db, username)
     cur.execute("UPDATE users SET rating=? WHERE username = ?", (rating, username))
+    db.commit()
     return old
 
 @db_f
@@ -87,6 +87,7 @@ def addWin(db, username):
 
     cur = db.cursor()
     cur.execute("UPDATE users SET wins=? WHERE username = ?", (wins + 1, username))
+    db.commit()
     return wins
 
 @db_f
@@ -94,5 +95,6 @@ def addLoss(db, username):
     losses = getRecord(db, username)[1]
     cur = db.cursor()
     cur.execute("UPDATE users SET losses=? WHERE username = ?", (losses + 1, username))
+    db.commit()
     return losses
 
