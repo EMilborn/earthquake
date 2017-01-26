@@ -32,7 +32,7 @@ def home():
 @app.route('/player/<username>')
 def player(username=''):
     rec = sql.getRecord(username)
-    rat = sql.getRating(username)
+    rat = int(round(sql.getRating(username)))
     return render_template('player.html', user = username, win = rec[0], loss = rec[1], rating = rat)
 
 

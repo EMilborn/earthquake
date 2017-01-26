@@ -164,7 +164,7 @@ canvas.addEventListener("mouseup", function(e) {
 canvas.addEventListener("mousemove", function(e) {
     mousex = e.offsetX;
     mousey = e.offsetY;
-    drawCrosshair(mousex, mousey);
+    // drawCrosshair(mousex, mousey);
     if(mouseposmatters) {
         sendMousePos();
     }
