@@ -193,6 +193,10 @@ document.body.addEventListener("keyup", function(e) {
     }
 })
 
+var unfreeze = function() {
+    $("#info").text("");
+}
+
 var framec = 0;
 var mainLoop = function() {
     framec++;
@@ -210,6 +214,10 @@ var mainLoop = function() {
     else if (state === 'PLAYING') {
         socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
+        if (d.freeze) {
+            $("#info").text("New Round! Start in 3..");
+            setTimeout(unfreeze, 3000);
+        }
         if (d !== 0 && d !== 1 && d !== -1) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             var users = d.users;
