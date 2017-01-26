@@ -11,11 +11,13 @@ var id = document.getElementById("thegame").innerHTML;
 var gameid = -1;
 var canvas = document.getElementById("gamecanvas");
 var ctx = canvas.getContext("2d");
+ctx.textAlign = "center";
 var width = canvas.width;
 var height = canvas.height;
 var queuebutton = document.getElementById("queuebutton");
 var map = -1;
 var me = {x: 0, y: 0};
+var names = {};
 queuebutton.addEventListener("click", function(e) {
     state = 'QUEUEING';
     queuebutton.style.display = 'none'
@@ -38,9 +40,13 @@ getOffsets = function(myX, myY) {
     }
 }
 
-drawPlayer = function(myX, myY, x, y) {
+drawPlayer = function(myX, myY, x, y, name) {
     var o = getOffsets(myX, myY);
     drawCircle(x + o.x, y + o.y, 25, "red");
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText(name, x + o.x, y + o.y + 6)
+
 }
 
 drawBullet = function(myX, myY, x, y) {
@@ -95,6 +101,7 @@ socket.on('join', function(json) {
     console.log('server said to join');
     gameid = json.gid;
     map = json.map;
+    names = json.names;
     if (state === 'QUEUEING')
         state = 'PLAYING';
     // socket.emit('message', 'joined')
@@ -197,15 +204,11 @@ var mainLoop = function() {
         socket.emit("givegame", {"user": id});
         ctx.font = "30px Arial";
         ctx.fillStyle = "red";
-        ctx.textAlign = "center";
         ctx.fillText("Waiting for game...", width / 2, height / 2);
     }
     else if (state === 'PLAYING') {
         socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
-        if (d.hasOwnProperty('end')) {
-            window.location.replace("player.html");
-        }
         if (d !== 0 && d !== 1 && d !== -1) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             var users = d.users;
@@ -213,7 +216,7 @@ var mainLoop = function() {
             drawMap(me.x, me.y);
             var bullets = d.bullets;
             for(var uid in users) {
-                drawPlayer(me.x, me.y, users[uid].x, users[uid].y);
+                drawPlayer(me.x, me.y, users[uid].x, users[uid].y, names[uid]);
                 //ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
             };
             for(var i=0; i<bullets.length; i++) {
