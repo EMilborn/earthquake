@@ -193,11 +193,16 @@ document.body.addEventListener("keyup", function(e) {
     }
 })
 
+var unfreeze = function() {
+    $("#info").text("");
+}
+
 var framec = 0;
 var mainLoop = function() {
     framec++;
-    if (framec % 5 === 0) {
+    if (framec == 5) {
         socket.emit("ping", {"user": id, "game": gameid});
+        framec = 0;
     }
     if (state === 'QUEUEING') {
         socket.emit("givegame", {"user": id});
@@ -208,6 +213,10 @@ var mainLoop = function() {
     else if (state === 'PLAYING') {
         socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
+        if (d.freeze) {
+            $("#info").text("New Round! Start in 3..");
+            setTimeout(unfreeze, 3000);
+        }
         if (d !== 0 && d !== 1 && d !== -1) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             var users = d.users;

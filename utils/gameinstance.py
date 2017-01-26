@@ -24,9 +24,9 @@ class Instance:
         self.addUser(user1)
         self.addUser(user2)
         self.isOver = False
+        self.newRound = False
         self.myMap = MapPicker().rand_map()
         self.spawnPlayers()
-        
 
     def addUser(self, uid):
         print 'adding user to game'
@@ -60,6 +60,7 @@ class Instance:
         self.isOver = True
 
     def spawnPlayers(self):
+        self.newRound = True
         first = 0
         # scramble spawns, in case players aren't scrambled
         spawns = self.myMap.spawns[::randint(0,1) * 2 - 1]
@@ -125,9 +126,10 @@ class Instance:
             # self.bullets.append(bullet(id, user.x, user.y,
 
     def getGameState(self):
-        if self.isOver:
-            return {'end': True}
-        data = {'users': {}, 'bullets': []}
+        data = {'users': {}, 'bullets': [], 'freeze': 0}
+        if self.newRound:
+            data['freeze'] = 1
+            self.newRound = False
         for uid, player in self.players.iteritems():
             data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y}
         for bullet in self.bullets:
