@@ -55,8 +55,10 @@ def connecter():
 def gamegiver(json):
     user = json['user']
     if user in utils.game.usertogame and utils.game.usertogame[user] != -1:
+        gid = utils.game.usertogame[user]
+        gMap = utils.game.games[gid].myMap
         print 'user is in game, sending join'
-        emit('join', utils.game.usertogame[json['user']])
+        emit('join', {'gid': gid, 'map': gMap.layout})
 
 
 @socketio.on('givedata')

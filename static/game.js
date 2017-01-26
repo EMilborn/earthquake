@@ -14,6 +14,8 @@ var ctx = canvas.getContext("2d");
 var width = canvas.width;
 var height = canvas.height;
 var queuebutton = document.getElementById("queuebutton");
+var map = -1;
+var me = {x: 0, y: 0};
 queuebutton.addEventListener("click", function(e) {
     state = 'QUEUEING';
     queuebutton.style.display = 'none'
@@ -23,17 +25,43 @@ drawCircle = function(x, y, r, col) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI);
     ctx.fillStyle = col;
+    ctx.strokeStyle = 'rgba(0,0,0,0)';
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
 }
 
-drawPlayer = function(x, y) {
-    drawCircle(x, y, 25, "red");
+getOffsets = function(myX, myY) {
+    return {
+        x: width / 2 - myX,  // so that player is always centered
+        y: height / 2 - myY
+    }
 }
 
-drawBullet = function(x, y) {
-    drawCircle(x, y, 5, "blue");
+drawPlayer = function(myX, myY, x, y) {
+    var o = getOffsets(myX, myY);
+    drawCircle(x + o.x, y + o.y, 25, "red");
+}
+
+drawBullet = function(myX, myY, x, y) {
+    var o = getOffsets(myX, myY);
+    drawCircle(x + o.x, y + o.y, 5, "blue");
+}
+
+drawMap = function(myX, myY) {  // draws map based on where player currently is
+    if(map == -1)
+        return;
+    ctx.beginPath();
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "white";
+    var o = getOffsets(myX, myY);
+    for(var i = 0; i < map.length; i++) {
+        var coo = map[i];
+        ctx.moveTo(coo[0] + o.x, coo[1] + o.y);
+        ctx.lineTo(coo[2] + o.x, coo[3] + o.y);
+    }
+    ctx.stroke();
+    ctx.closePath();
 }
 
 /*
@@ -63,9 +91,10 @@ socket.on('hello', function(d) {
     console.log('server said ' + d);
 });
 
-socket.on('join', function(gid) {
+socket.on('join', function(json) {
     console.log('server said to join');
-    gameid = gid;
+    gameid = json.gid;
+    map = json.map;
     if (state === 'QUEUEING')
         state = 'PLAYING';
     // socket.emit('message', 'joined')
@@ -97,7 +126,8 @@ var mouseposmatters = false;
 var mousex = -1;
 var mousey = -1;
 sendMousePos = function() {
-    socket.emit("input", {user:id, event:"mousemove", x: mousex, y: mousey})
+    var o = getOffsets(me.x, me.y);
+    socket.emit("input", {user:id, event:"mousemove", x: mousex - o.x, y: mousey - o.y});  // reverse offsets to get real mouse loc
 }
 //http://javascript.info/tutorial/keyboard-events
 canvas.addEventListener("mousedown", function(e) {
@@ -174,15 +204,17 @@ var mainLoop = function() {
         socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
         if (d !== 0 && d !== 1 && d !== -1) {
-            users = d.users;
-            bullets = d.bullets;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for(var i=0; i<users.length; i++) {
-                drawPlayer(users[i].x, users[i].y);
+            var users = d.users;
+            me = users[id];
+            drawMap(me.x, me.y);
+            var bullets = d.bullets;
+            for(var uid in users) {
+                drawPlayer(me.x, me.y, users[uid].x, users[uid].y);
                 //ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
             };
             for(var i=0; i<bullets.length; i++) {
-                drawBullet(bullets[i].x, bullets[i].y);
+                drawBullet(me.x, me.y, bullets[i].x, bullets[i].y);
             };
         }
     }

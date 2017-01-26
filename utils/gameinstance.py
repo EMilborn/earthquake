@@ -5,6 +5,8 @@ from tick import *
 import elo
 import time
 import sql
+from map import MapPicker
+
 
 class Instance:
 
@@ -16,6 +18,8 @@ class Instance:
         self.addUser(user2)
         self.isOver = False
         self.spawnPlayers()
+        self.myMap = MapPicker().rand_map()
+
 
     def addUser(self, uid):
         print 'adding user to game'
@@ -104,9 +108,9 @@ class Instance:
             # self.bullets.append(bullet(id, user.x, user.y,
 
     def getGameState(self):
-        data = {'users': [], 'bullets': []}
+        data = {'users': {}, 'bullets': []}
         for uid, player in self.players.iteritems():
-            data['users'].append({'x': player.pos.x, 'y': player.pos.y})
+            data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y}
         for bullet in self.bullets:
             data['bullets'].append({'x': bullet.pos.x, 'y': bullet.pos.y})
         # print usercoords
