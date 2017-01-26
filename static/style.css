@@ -1,16 +1,15 @@
 .well{
-	text-align: center;
+    text-align: center;
 }
 
 body{
-	background-color: lightgrey;
+    background-color: lightgrey;
 }
 
 .container{
-	padding-top: 8%;
+    padding-top: 8%;
 }
 
 h1{
-	text-align: center;
+    text-align: center;
 }
-

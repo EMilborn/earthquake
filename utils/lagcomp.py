@@ -1,9 +1,8 @@
-#TODO: Find latency in frequent intervals.
 from collections import deque
 import time
 from copy import deepcopy
 
-class LagCompClass:
+class LagComp:
     def __init__(self):
         self.history = deque()
         self.latency = deque()

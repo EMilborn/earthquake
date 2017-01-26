@@ -97,4 +97,3 @@ def addLoss(db, username):
     cur.execute("UPDATE users SET losses=? WHERE username = ?", (losses + 1, username))
     db.commit()
     return losses
-

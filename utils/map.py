@@ -25,7 +25,7 @@ class Map:
         self.layout = [[int(i) for i in s.strip().split(',')] for s in map_lines]
         self.spawns = [Vector(coo[0], coo[1]) for coo in self.layout[:2]]
         self.layout = self.layout[2:]
-        self.vecs = [(Vector(coo[0], coo[1]), Vector(coo[2], coo[3])) for coo in self.layout]   
+        self.vecs = [(Vector(coo[0], coo[1]), Vector(coo[2], coo[3])) for coo in self.layout]
 
 
     def __str__(self):
@@ -64,12 +64,3 @@ class MapPicker:
 
     def rand_map(self):
         return Map(random.choice(self.maps))
-
-
-
-if __name__ == '__main__':
-    mpick = MapPicker()
-    print mpick.get_maps()
-    mp = Map(mpick.rand_map())
-    print mp
-

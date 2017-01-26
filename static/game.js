@@ -1,6 +1,3 @@
-// $.get("/game", {})
-
-// var io = require('socket.io')
 var state = 'WAITING'
 /* states:
 WAITING - user hasn't queued yet

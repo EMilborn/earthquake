@@ -1,4 +1,4 @@
-from lagcomp import LagCompClass
+from lagcomp import LagComp
 from vector import Vector
 from tick import TICKMULT
 
@@ -27,7 +27,7 @@ class Player:
         self.userid = id
         self.health = self.HEALTH
         self.cooldown = 0
-        self.lagcomp = LagCompClass()
+        self.lagcomp = LagComp()
 
     def restartInput(self):
         self.input = PlayerInput()

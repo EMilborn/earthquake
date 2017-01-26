@@ -33,6 +33,7 @@ def moveToGame(u1, u2):
     usertogame[u1] = gameid
     usertogame[u2] = gameid
 
+
 def moveToLobby(user):
     usertogame[user] = -1
     lobby.add(user)
@@ -59,6 +60,7 @@ def handleEvent(event):
     if game is not None:
         game.handleEvent(event)
 
+
 def getState(uid, gameid):
     if uid not in users:
         return -1
@@ -66,8 +68,8 @@ def getState(uid, gameid):
         return 1
     return games[gameid].getGameState()
 
-def updateElo(scores):
 
+def updateElo(scores):
     for uid, score in scores.iteritems():
         if score > 4:
             lose = uid
@@ -78,6 +80,7 @@ def updateElo(scores):
     elo.update(winnerId, loserId)
     sql.addWin(winnerId)
     sql.addLoss(loserId)
+
 
 pops = []
 def run():
@@ -112,5 +115,3 @@ def run():
             games.pop(gid, None)
         eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
         framecount += 1
-
-# if __name__ == '__main__':

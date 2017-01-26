@@ -12,4 +12,3 @@ def update(uW, uL):
     delta = k * (1.0 - odds)
     sql.setRating(db, uW, rW + delta)
     sql.setRating(db, uL, rL - delta)
-    

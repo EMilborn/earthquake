@@ -28,7 +28,8 @@ def main():
 def home():
     id = utils.game.addUser(session['user'] + str(randint(1, 1000000)), session['user'])
     return render_template('index.html', id=id, name=session['user'])
-		
+
+
 @app.route('/player/<username>')
 def player(username=''):
     rec = sql.getRecord(username)
@@ -36,6 +37,7 @@ def player(username=''):
     if rat is not None:
         return render_template('player.html', user = username, win = rec[0], loss = rec[1], rating = int(round(rat)))
     return render_template('failplayer.html')
+
 
 @socketio.on('message')
 def gotmessage(msg):
@@ -85,6 +87,7 @@ def ping(json):
     utils.game.games[gameid].players[user].lastPing = time.time()
     emit('pong')
 
+
 @socketio.on('ping2')
 def ping2(json):
     user = json['user']
@@ -120,6 +123,7 @@ def bye():
     if "user" in session:
         session.pop("user")
     return redirect(url_for('main'))
+
 
 if __name__ == '__main__':
     f = "data/users.db"
