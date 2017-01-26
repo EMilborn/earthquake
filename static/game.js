@@ -203,6 +203,9 @@ var mainLoop = function() {
     else if (state === 'PLAYING') {
         socket.emit("givedata", {"game": gameid, "user": id});
         d = latestGameData;
+        if (d.hasOwnProperty('end')) {
+            window.location.replace("player.html");
+        }
         if (d !== 0 && d !== 1 && d !== -1) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             var users = d.users;

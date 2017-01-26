@@ -122,6 +122,8 @@ class Instance:
             # self.bullets.append(bullet(id, user.x, user.y,
 
     def getGameState(self):
+        if self.isOver:
+            return {'end': True}
         data = {'users': {}, 'bullets': []}
         for uid, player in self.players.iteritems():
             data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y}
