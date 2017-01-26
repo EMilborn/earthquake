@@ -60,7 +60,6 @@ class Instance:
         self.isOver = True
 
     def spawnPlayers(self):
-        self.newRound = True
         first = 0
         # scramble spawns, in case players aren't scrambled
         spawns = self.myMap.spawns[::randint(0,1) * 2 - 1]
@@ -77,12 +76,14 @@ class Instance:
             user.lagcomp.add_state(user.pos)
             if user.health <= 0:
                 self.scores[uid] += 1
+                self.newRound = True
                 if self.scores[uid] > 4:  # this player loses
                     self.endGame()
                     return
                 else:
                     self.spawnPlayers()
             if user.input.lockTime <= 0:
+                self.newRound = False
                 velocity = Vector(0,0)
                 if user.input.left:
                     velocity += LEFT
@@ -129,7 +130,6 @@ class Instance:
         data = {'users': {}, 'bullets': [], 'freeze': 0}
         if self.newRound:
             data['freeze'] = 1
-            self.newRound = False
         for uid, player in self.players.iteritems():
             data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y}
         for bullet in self.bullets:
