@@ -38,7 +38,7 @@ def add_user(db, user, password):
 @db_f
 def get_userid(db, user):
     id_holder = db.cursor().execute(
-        'SELECT id FROM users WHERE username = ?', (user))
+        'SELECT id FROM users WHERE username = ?', (user,))
     for row in id_holder:
         return row[0]
 
@@ -63,7 +63,7 @@ def next_userid(db):
 @db_f
 def getRating(db, username):
     cur = db.cursor()
-    res = cur.execute("SELECT rating FROM users WHERE username = ?", (username))
+    res = cur.execute("SELECT rating FROM users WHERE username = ?", (username,))
     for i in res:
         return i[0]
 
@@ -77,7 +77,7 @@ def setRating(db, username, rating):
 @db_f
 def getRecord(db, username):
     cur = db.cursor()
-    res = cur.execute("SELECT wins, losses FROM users WHERE username = ?", username)
+    res = cur.execute("SELECT wins, losses FROM users WHERE username = ?", (username,))
     for i in res:
         return i
 
