@@ -119,8 +119,8 @@ socket.on('gamedata', function(json) {
     //console.log('got that data')
     //tempMsg('Got gamedata', 500);
     latestGameData = json;
-    if(latestGameData === -1)
-        location.reload(true);  // we aren't registered as a user
+    if(latestGameData === -1 || latestGameData === 1)
+        location.reload(true);  // game ended, or we were never in one
     //console.log(latestGameData)
 });
 

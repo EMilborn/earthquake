@@ -29,12 +29,11 @@ def home():
     id = utils.game.addUser(session['user'] + str(randint(1, 1000000)), session['user'])
     return render_template('index.html', id=id, name=session['user'])
 		
-@app.route('/player/')
-def player():
-		user = session['user']
-                rec = sql.getRecord(user)
-                rat = sql.getRating(user)
-		return render_template('player.html', user = user, win = rec[0], loss = rec[1], rating = rat )
+@app.route('/player/<username>')
+def player(username=''):
+    rec = sql.getRecord(username)
+    rat = sql.getRating(username)
+    return render_template('player.html', user = username, win = rec[0], loss = rec[1], rating = rat)
 
 
 @socketio.on('message')
