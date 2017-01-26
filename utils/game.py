@@ -1,7 +1,7 @@
 import time
 import app
 import json
-from random import randint
+from random import randint, choice
 import eventlet
 import math
 from gameinstance import Instance, TICKRATE
@@ -17,9 +17,10 @@ REALTICKTIME = float(TICKTIME)  # possibly will be used to account for some time
 
 
 users = {}  # nickname -> real name
-lobby = []
+lobby = set()
 games = {}
 usertogame = {}
+queueing = set()
 running = False
 
 
@@ -34,10 +35,7 @@ def moveToGame(u1, u2):
 
 def moveToLobby(user):
     usertogame[user] = -1
-    lobby.append(user)
-    if len(lobby) == 2:  # we can change cond for moving to game later
-        moveToGame(lobby[0], lobby[1])
-        lobby[:] = []
+    lobby.add(user)
 
 
 def addUser(user, realName):
@@ -81,8 +79,9 @@ def updateElo(scores):
     sql.addWin(winnerId)
     sql.addLoss(loserId)
 
-
+pops = []
 def run():
+    global lobby, queueing
     print "Running at", TICKRATE, "Hz"
     running = True
     debugtime = True
@@ -90,13 +89,27 @@ def run():
     lastsecondframe = time.time()
     while(1):
         start = time.time()
+        queueingPlayers = lobby & queueing
+        while(len(queueingPlayers) > 1):
+            p1 = choice(tuple(queueingPlayers))
+            queueingPlayers.remove(p1)
+            p2 = choice(tuple(queueingPlayers))
+            queueingPlayers.remove(p2)
+            lobby.remove(p1)
+            queueing.remove(p1)
+            lobby.remove(p2)
+            queueing.remove(p2)
+            moveToGame(p1, p2)
+
         for gid, game in games.iteritems():
             game.gameLoop()
             if game.isOver:
                 updateElo(game.scores)
-                games.pop(gid, None)
+                pops.append(gid)
                 for uid, user in game.players.iteritems():
                     moveToLobby(uid)  # right now, the players will be put back in a game with each other lol
+        for gid in pops:
+            games.pop(gid, None)
         eventlet.sleep(max(0, REALTICKTIME + start - time.time()))
         framecount += 1
 

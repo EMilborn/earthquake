@@ -55,6 +55,8 @@ def connecter():
 @socketio.on('givegame')
 def gamegiver(json):
     user = json['user']
+    if not user in utils.game.queueing:
+        utils.game.queueing.add(user)
     if user in utils.game.usertogame and utils.game.usertogame[user] != -1:
         gid = utils.game.usertogame[user]
         gMap = utils.game.games[gid].myMap

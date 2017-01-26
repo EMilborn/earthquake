@@ -200,7 +200,6 @@ var mainLoop = function() {
         socket.emit("ping", {"user": id, "game": gameid});
     }
     if (state === 'QUEUEING') {
-        console.log("began queueing");
         socket.emit("givegame", {"user": id});
         ctx.font = "30px Arial";
         ctx.fillStyle = "red";
