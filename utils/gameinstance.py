@@ -6,6 +6,7 @@ import elo
 import time
 import sql
 from map import MapPicker
+from random import randint
 
 
 LEFT = Vector(-Player.SPEED, 0)
@@ -60,8 +61,10 @@ class Instance:
 
     def spawnPlayers(self):
         first = 0
+        # scramble spawns, in case players aren't scrambled
+        spawns = myMap.spawns[::randint(0,1) * 2 - 1]
         for uid, user in self.players.iteritems():
-            user.pos = Vector(first * 500 + 100, first * 500 + 100)
+            user.pos = spawns[first]
             user.restartInput()
             user.health = Player.HEALTH
             first += 1

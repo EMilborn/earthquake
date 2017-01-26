@@ -15,6 +15,7 @@ class Map:
     def __init__(self, fn=""):
         self.layout = []
         self.vecs = []
+        self.spawns = []
         if fn != "":
             self.loadmap(fn)
 
@@ -22,7 +23,11 @@ class Map:
         with open(fn, "r") as f:
             map_lines = f.readlines()
         self.layout = [[int(i) for i in s.strip().split(',')] for s in map_lines]
+        self.spawns = [Vector(coo[0], coo[1]) for coo in self.layout[:2]]
+        self.layout = self.layout[2:]
         self.vecs = [(Vector(coo[0], coo[1]), Vector(coo[2], coo[3])) for coo in self.layout]   
+
+
     def __str__(self):
         return str(self.layout)
 
