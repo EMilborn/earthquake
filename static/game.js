@@ -70,6 +70,18 @@ drawMap = function(myX, myY) {  // draws map based on where player currently is
     ctx.closePath();
 }
 
+drawCrosshair = function(x, y) {
+    ctx.beginPath();
+    ctx.strokeStyle = "blue";
+    ctx.fillStyle = "blue";
+    ctx.moveTo(x - 15, y);
+    ctx.lineTo(x + 15, y);
+    ctx.moveTo(x, y - 15);
+    ctx.lineTo(x, y + 15);
+    ctx.stroke();
+    ctx.closePath();
+}
+
 /*
 //This allows for the use of images instead of cirlces
 img = new Image();
@@ -152,6 +164,7 @@ canvas.addEventListener("mouseup", function(e) {
 canvas.addEventListener("mousemove", function(e) {
     mousex = e.offsetX;
     mousey = e.offsetY;
+    drawCrosshair(mousex, mousey);
     if(mouseposmatters) {
         sendMousePos();
     }
