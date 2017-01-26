@@ -2,9 +2,9 @@ from tick import TICKMULT
 
 class Bullet:
 
-    DAMAGE = 10
+    DAMAGE = 20
     RADIUS = 10
-    DELAY = 30 * TICKMULT
+    DELAY = 60 * TICKMULT
     SPEED = min(10 * TICKMULT, RADIUS * 2 - 0.1)  # has to be < radius*2 for collision
 
     def __init__(self, id, pos, vel):
