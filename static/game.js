@@ -196,8 +196,9 @@ document.body.addEventListener("keyup", function(e) {
 var framec = 0;
 var mainLoop = function() {
     framec++;
-    if (framec % 5 === 0) {
+    if (framec == 5) {
         socket.emit("ping", {"user": id, "game": gameid});
+        framec = 0;
     }
     if (state === 'QUEUEING') {
         console.log("began queueing");
