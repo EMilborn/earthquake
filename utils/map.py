@@ -49,7 +49,6 @@ class Map:
                 if (pos - e1).isClockwiseOf(projdir):
                     direction = -direction
                 newPos = direction.normalized() * r + projection
-                print pos, pos + vel, newPos
                 vel = newPos - pos
         if yOrN:
             return False

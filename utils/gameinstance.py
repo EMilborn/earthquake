@@ -131,7 +131,7 @@ class Instance:
         if self.newRound:
             data['freeze'] = 1
         for uid, player in self.players.iteritems():
-            data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y}
+            data['users'][uid] = {'x': player.pos.x, 'y': player.pos.y, 'hp': player.health}
         for bullet in self.bullets:
             data['bullets'].append({'x': bullet.pos.x, 'y': bullet.pos.y})
         # print usercoords

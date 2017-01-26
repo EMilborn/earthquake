@@ -40,9 +40,13 @@ getOffsets = function(myX, myY) {
     }
 }
 
-drawPlayer = function(myX, myY, x, y, name) {
+lerp100 = function(a, b, u) {
+    return ((100 - u) * a + u * b) / 100
+}
+
+drawPlayer = function(myX, myY, x, y, hp, name) {
     var o = getOffsets(myX, myY);
-    drawCircle(x + o.x, y + o.y, 25, "red");
+    drawCircle(x + o.x, y + o.y, 25, 'rgb(' + lerp100(255, 50, hp) + ',' + lerp100(50, 255, hp) + ',50)');
     ctx.font = "24px Arial";
     ctx.fillStyle = "white";
     ctx.fillText(name, x + o.x, y + o.y + 6)
@@ -237,7 +241,7 @@ var mainLoop = function() {
             drawMap(me.x, me.y);
             var bullets = d.bullets;
             for(var uid in users) {
-                drawPlayer(me.x, me.y, users[uid].x, users[uid].y, names[uid]);
+                drawPlayer(me.x, me.y, users[uid].x, users[uid].y, users[uid].hp, names[uid]);
                 //ctx.drawImage(img, d[i].x, d[i].y, 245, 309);
             };
             for(var i=0; i<bullets.length; i++) {
